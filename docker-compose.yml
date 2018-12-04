@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  aggregation_api:
+    build:
+      context: ./
+    environment:
+      - "NODE_ENV=production"
+      - "MONGODB_URL=${MONGODB_URL}"
+    ports:
+      - "3000:3000"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 5
+        window: 15s
