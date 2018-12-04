@@ -1,0 +1,78 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:11.1.0
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+          - v1-dependencies-{{ checksum "package.json" }}-
+          - v1-dependencies-
+
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+
+  deploy:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:11.1.0
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/repo
+
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "49:d0:99:ae:33:c3:33:11:f9:5c:9e:85:44:90:2b:78"
+      - run:
+          name: Keyscan deploy server
+          command: ssh-keyscan -H $DEPLOY_SERVER >> ~/.ssh/known_hosts
+
+      - run:
+          name: Deploy
+          command: ssh root@$DEPLOY_SERVER 'source /opt/.env && cd /opt/aggregation-api && git pull && docker-compose up -d --build'
+
+  notify:
+    docker:
+      - image: circleci/node:11.1.0
+
+    working_directory: ~/repo
+
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "85:a7:2e:d9:6a:eb:0a:f7:a1:76:22:a3:d0:ec:e6:4d"
+      - run:
+          name: Notify via Telegram
+          command: curl --data chat_id="$BOT_CHAT_ID" --data "text=👍%20Successfully%20deployed%20aggregation-api%20on%20ivend-main%20($CIRCLE_SHA1)" "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
+
+workflows:
+  version: 2
+  flowpay_payment_gateway:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - master
+      - deploy:
+          requires:
+            - build
+      - notify:
+          requires:
+            - deploy
