@@ -63,7 +63,7 @@ jobs:
 
 workflows:
   version: 2
-  flowpay_payment_gateway:
+  aggregation_api_deploy:
     jobs:
       - build:
           filters:
