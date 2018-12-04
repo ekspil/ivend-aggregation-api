@@ -65,7 +65,11 @@ workflows:
   version: 2
   aggregation_api_deploy:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only:
+                - master
       - deploy:
           requires:
             - build
