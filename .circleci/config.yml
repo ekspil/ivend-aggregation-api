@@ -59,7 +59,9 @@ jobs:
             - "85:a7:2e:d9:6a:eb:0a:f7:a1:76:22:a3:d0:ec:e6:4d"
       - run:
           name: Notify via Telegram
-          command: curl --data chat_id="$BOT_CHAT_ID" --data "text=Successfully%20deployed%20aggregation-api%20on%20ivend-main%20($CIRCLE_SHA1)" "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
+          command: curl --data chat_id="$BOT_CHAT_ID" --data "text=Successfully%20deployed%20aggregation-api%20on%20ivend-main%20($GIT_COMMIT_DESC)" "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
+          environment:
+            GIT_COMMIT_DESC: $(git log --format=oneline -n 1 $CIRCLE_SHA1  | sed 's/ /%20/g')
 
 workflows:
   version: 2
