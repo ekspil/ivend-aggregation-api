@@ -9,7 +9,8 @@ const router = new Router()
 module.exports = function (injects) {
     const {aggregationController} = injects
 
-    router.post("/registerController", aggregationController.registerController);
+    router.post("/register/controller", aggregationController.registerController);
+    router.post("/register/error", aggregationController.registerError);
 
     return router;
 }
