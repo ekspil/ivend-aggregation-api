@@ -26,7 +26,6 @@ jobs:
   test:
     docker:
       - image: circleci/node:11.1.0
-      - image: circleci/mongo
 
     working_directory: ~/repo
 
@@ -39,7 +38,7 @@ jobs:
           - v1-dependencies-{{ checksum "package.json" }}-
           - v1-dependencies-
 
-      - run: MONGODB_URL=mongodb://localhost/aggregation_test npm test
+      - run: MONGODB_URL=$MONGODB_TEST_URL npm test
 
   deploy:
     docker:
