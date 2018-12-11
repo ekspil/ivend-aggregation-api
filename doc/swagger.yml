@@ -1,20 +1,17 @@
 swagger: "2.0"
 info:
-  description: "iVend API specification"
+  description: "iVend Aggregation API specification"
   version: "1.0.0"
-  title: "Flowpay Payment Gateway API"
+  title: "iVend Aggregation API"
   contact:
-    email: "apiteam@swagger.io"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "149.28.113.218:3001"
-basePath: "/api/v1"
+    email: "pshenmic@gmail.com"
+# host: "undefined"
+# basePath: "/api/v1"
+# schemes:
+#   - "http"
 tags:
 - name: "aggregate"
-  description: "Aggregation API for aggregation data from the controllers."
-schemes:
-- "http"
+  description: "Aggregation API for aggregation data from the controllers"
 paths:
   /register/controller:
     post:
@@ -251,3 +248,9 @@ definitions:
         type: "number"
         format: "int32"
         description: "Signal strength of the modem (3G). 0 - bad, 1 - medium, 2 - good"
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /pshenmic/ivend-aggregation-api/1.0.0
+schemes:
+ - https
+ - http
