@@ -23,6 +23,24 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
 
+  test:
+    docker:
+      - image: circleci/node:11.1.0
+      - image: circleci/mongo:4.1.6-xenial
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+          - v1-dependencies-{{ checksum "package.json" }}-
+          - v1-dependencies-
+
+      - run: MONGODB_URL=mongodb://localhost/aggregation_test npm test
+
   deploy:
     docker:
       # specify the version you desire here
@@ -71,7 +89,18 @@ workflows:
             branches:
               only:
                 - master
+                - develop
+      -test:
+          filters:
+            branches:
+              only:
+                - master
+                - develop
       - deploy:
+          filters:
+            branches:
+              only:
+                - master
           requires:
             - build
       - notify:
