@@ -37,11 +37,11 @@ paths:
           schema:
             $ref: "#/definitions/RegisterControllerResponse"
         400:
-          description: "Bad request, request is not valid"
+          description: &invalid_request_body "Bad request, request body is not valid"
         404:
           description: "Such UID not found"
         500:
-          description: "Internal server error"
+          description: &internal_server_error "Internal server error"
   /register/sale:
     post:
       tags:
@@ -64,11 +64,13 @@ paths:
         200:
           description: "Successfully registered sale"
         400:
-          description: "Error while registering sale"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
+          description: *invalid_request_body
+        401:
+          description: "Access key does not match give UID of controller"
+        404:
+          description: "One or more ids in the Items field does not exist"
         500:
-          description: "Internal server error"
+          description: *internal_server_error
   /register/error:
     post:
       tags:
@@ -95,7 +97,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
         500:
-          description: "Internal server error"
+          description: *internal_server_error
   /register/state:
     post:
       tags:
@@ -122,7 +124,7 @@ paths:
           schema:
             $ref: "#/definitions/RegisterStateResponse"
         500:
-          description: "Internal server error"
+          description: *internal_server_error
 definitions:
   RegisterControllerRequest:
     type: "object"
@@ -154,12 +156,12 @@ definitions:
         description: "Access key from RegisterControllerRequest for requests authentication"
       CheckTime:
         type: "string"
-        description: "UID of the controller"
+        description: "Receipt time in format DD.MM.YYYY hh:mm:ss"
       Items:
-        description: "Array of IDs of the SaleItem"
+        description: "Array of IDs of the items"
         type: array
         items:
-          $ref: '#/definitions/SaleItem'
+          type: integer
   RegisterErrorRequest:
     type: "object"
     properties:
@@ -199,16 +201,6 @@ definitions:
       msg:
         type: "string"
         description: "Error string"
-  SaleItem:
-    type: "object"
-    properties:
-      id:
-        type: "number"
-        description: "Id of the item"
-      price:
-        type: "number"
-        format: "float"
-        description: "Item price"
   VendingState:
     type: "object"
     properties:
