@@ -142,4 +142,22 @@ describe("RegisterController", () => {
 
     })
 
+    describe("RegisterController - Success", () => {
+
+        test("Success", async () => {
+            const requestBody = {UID: "FIRST_TEST_UID"}
+
+            const response = await request.agent(callback)
+                .post(path)
+                .send(requestBody)
+                .set("Content-Type", "application/json")
+                .set("Accept", "application/json")
+
+            expect(response.status).toEqual(200)
+            expect(response.body.Key).toEqual("first_access_key")
+            expect(response.body.Mode).toEqual("mdb")
+        })
+
+    })
+
 })
