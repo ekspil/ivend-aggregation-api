@@ -18,8 +18,15 @@ ApiModule.getCallback = () => {
     return app.callback()
 }
 
-ApiModule.start = async () => {
-    await mongoose.connect(process.env.MONGODB_URL)
+ApiModule.start = async (mongoDBURL) => {
+    try {
+        const mongodb = mongoDBURL ? mongoDBURL : process.env.MONGODB_URL
+        await mongoose.connect(mongodb)
+    } catch (e) {
+        console.error(e)
+        console.error(e.stack)
+        throw e
+    }
 
     app.use(bodyParser())
 
