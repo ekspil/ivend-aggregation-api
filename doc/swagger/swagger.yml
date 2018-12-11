@@ -156,10 +156,9 @@ definitions:
         type: "string"
         description: "UID of the controller"
       Items:
-        type: "array"
         description: "Array of IDs of the SaleItem"
+        type: array
         items:
-          type: array
           $ref: '#/definitions/SaleItem'
   RegisterErrorRequest:
     type: "object"
