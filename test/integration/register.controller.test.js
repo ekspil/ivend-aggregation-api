@@ -7,7 +7,7 @@ const request = require("supertest")
 
 const App = require("../../app/App")
 
-const path = "/api/v1/registerController"
+const path = "/api/v1/register/controller"
 
 let callback
 
