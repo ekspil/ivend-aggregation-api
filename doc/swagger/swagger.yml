@@ -5,10 +5,10 @@ info:
   title: "iVend Aggregation API"
   contact:
     email: "pshenmic@gmail.com"
-# host: "undefined"
-# basePath: "/api/v1"
-# schemes:
-#   - "http"
+host: "undefined"
+basePath: "/api/v1"
+schemes:
+  - "http"
 tags:
 - name: "aggregate"
   description: "Aggregation API for aggregation data from the controllers"
@@ -159,7 +159,8 @@ definitions:
         type: "array"
         description: "Array of IDs of the SaleItem"
         items:
-          type: integer
+          type: array
+          $ref: '#/definitions/SaleItem'
   RegisterErrorRequest:
     type: "object"
     properties:
@@ -175,19 +176,6 @@ definitions:
       Msg:
         type: "string"
         description: "Error message"
-  GetItemsRequest:
-    type: "object"
-    properties:
-      UID:
-        type: "string"
-        description: "UID of the controller"
-      Key:
-        type: "string"
-        description: "Access key from RegisterControllerRequest for requests authentication"
-  GetItemsResponse:
-    type: "array"
-    items:
-      $ref: "#/definitions/SaleItem"
   RegisterStateRequest:
     type: "object"
     properties:
@@ -248,9 +236,3 @@ definitions:
         type: "number"
         format: "int32"
         description: "Signal strength of the modem (3G). 0 - bad, 1 - medium, 2 - good"
-# Added by API Auto Mocking Plugin
-host: virtserver.swaggerhub.com
-basePath: /pshenmic/ivend-aggregation-api/1.0.0
-schemes:
- - https
- - http
