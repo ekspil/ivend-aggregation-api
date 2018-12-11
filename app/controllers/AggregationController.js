@@ -1,6 +1,7 @@
 const ControllerService = require("../services/ControllerService")
 const ValidationService = require("../services/ValidationService")
 const RegisterControllerRequest = require("../models/RegisterControllerRequest")
+const RegisterErrorRequest = require("../models/RegisterErrorRequest")
 const RegisterControllerResponse = require("../models/RegisterControllerResponse")
 
 
@@ -13,7 +14,7 @@ class AggregationController {
         this.controllerService = new ControllerService();
 
         this.registerController = this.registerController.bind(this)
-        this.returnValidationError = this.returnValidationError.bind(this)
+        this.registerError = this.registerError.bind(this)
     }
 
     async registerController(ctx) {
@@ -40,11 +41,36 @@ class AggregationController {
             ctx.status = 200
         }
         catch (e) {
-            console.log('body: ', JSON.stringify(ctx.request.body))
-            console.log('params: ', JSON.stringify(ctx.params))
-            console.error(e)
-            console.error(e.stack)
-            ctx.status = 500
+            return this.returnInternalServerError(ctx, e)
+        }
+
+    }
+
+    async registerError(ctx) {
+        try {
+            const {UID, Key, ErrorTime, Msg} = ctx.request.body
+
+            const validationResult = ValidationService.validateRegisterErrorRequest({UID, Key, ErrorTime, Msg})
+
+            if (validationResult.error) {
+                return await this.returnValidationError(ctx)
+            }
+
+            const registerErrorRequest = new RegisterErrorRequest({UID, Key, ErrorTime, Msg})
+
+            const controller = await this.controllerService.getControllerByUID(registerErrorRequest.UID)
+
+            if (!controller || (controller && controller.accessKey !== registerErrorRequest.Key)) {
+                return this.returnUnauthenticated(ctx)
+            }
+
+            await this.controllerService.addErrorToController(registerErrorRequest)
+
+            ctx.body = ""
+            ctx.status = 200
+        }
+        catch (e) {
+            return this.returnInternalServerError(ctx, e)
         }
 
     }
@@ -54,9 +80,23 @@ class AggregationController {
         ctx.body = ""
     }
 
+    async returnUnauthenticated(ctx) {
+        ctx.status = 401
+        ctx.body = ""
+    }
+
     async returnNotFound(ctx) {
         ctx.status = 404
         ctx.body = ""
+    }
+
+    async returnInternalServerError(ctx, e) {
+        console.log('body: ', JSON.stringify(ctx.request.body))
+        console.log('params: ', JSON.stringify(ctx.params))
+        console.error(e)
+        console.error(e.stack)
+        ctx.body = ""
+        ctx.status = 500
     }
 
 }
