@@ -5,7 +5,7 @@ class RegisterControllerResponse {
      *
      * @param rawObj {object} raw object with Key and Mode
      *
-     * @returns {BillRequest} billRequest instance
+     * @returns {RegisterControllerRequest} registerControllerRequest instance
      * @throws {Error} throws on wrong rawObj
      */
     constructor(rawObj) {
