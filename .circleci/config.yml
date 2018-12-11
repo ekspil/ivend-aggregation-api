@@ -90,7 +90,7 @@ workflows:
               only:
                 - master
                 - develop
-      -test:
+      - test:
           filters:
             branches:
               only:
