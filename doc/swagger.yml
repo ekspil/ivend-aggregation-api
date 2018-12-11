@@ -1,0 +1,253 @@
+swagger: "2.0"
+info:
+  description: "iVend API specification"
+  version: "1.0.0"
+  title: "Flowpay Payment Gateway API"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "149.28.113.218:3001"
+basePath: "/api/v1"
+tags:
+- name: "aggregate"
+  description: "Aggregation API for aggregation data from the controllers."
+schemes:
+- "http"
+paths:
+  /register/controller:
+    post:
+      tags:
+      - "aggregate"
+      summary: "Register the controller"
+      description: "Register the controller"
+      operationId: "registerController"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "RegisterControllerRequest"
+        required: true
+        schema:
+          $ref: "#/definitions/RegisterControllerRequest"
+      responses:
+        200:
+          description: "Successfully registered controller"
+          schema:
+            $ref: "#/definitions/RegisterControllerResponse"
+        400:
+          description: "Bad request, request is not valid"
+        404:
+          description: "Such UID not found"
+        500:
+          description: "Internal server error"
+  /register/sale:
+    post:
+      tags:
+      - "aggregate"
+      summary: "Register the sale"
+      description: "Register the sale"
+      operationId: "registerSale"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "RegisterSaleRequest"
+        required: true
+        schema:
+          $ref: "#/definitions/RegisterSaleRequest"
+      responses:
+        200:
+          description: "Successfully registered sale"
+        400:
+          description: "Error while registering sale"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "Internal server error"
+  /register/error:
+    post:
+      tags:
+      - "aggregate"
+      summary: "Register the error"
+      description: "Register the error"
+      operationId: "registerError"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "RegisterErrorRequest"
+        required: true
+        schema:
+          $ref: "#/definitions/RegisterErrorRequest"
+      responses:
+        200:
+          description: "Successfully registered error"
+        400:
+          description: "Error while registering error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "Internal server error"
+  /register/state:
+    post:
+      tags:
+      - "aggregate"
+      summary: "Register the state"
+      description: "Register the state"
+      operationId: "registerState"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "RegisterStateRequest"
+        required: true
+        schema:
+          $ref: "#/definitions/RegisterStateRequest"
+      responses:
+        200:
+          description: "Successfully registered error"
+        400:
+          description: "Error while registering error"
+          schema:
+            $ref: "#/definitions/RegisterStateResponse"
+        500:
+          description: "Internal server error"
+definitions:
+  RegisterControllerRequest:
+    type: "object"
+    properties:
+      UID:
+        type: "string"
+        description: "UID of the controller"
+  RegisterControllerResponse:
+    type: "object"
+    properties:
+      Key:
+        type: "string"
+        description: "Access Key for requests authentications"
+      Mode:
+        type: "string"
+        description: "Mode for the controller"
+        enum: &controller_mode
+        - "mdb"
+        - "exe"
+        - "cashless"
+  RegisterSaleRequest:
+    type: "object"
+    properties:
+      UID:
+        type: "string"
+        description: "UID of the controller"
+      Key:
+        type: "string"
+        description: "Access key from RegisterControllerRequest for requests authentication"
+      CheckTime:
+        type: "string"
+        description: "UID of the controller"
+      Items:
+        type: "array"
+        description: "Array of IDs of the SaleItem"
+        items:
+          type: integer
+  RegisterErrorRequest:
+    type: "object"
+    properties:
+      UID:
+        type: "string"
+        description: "UID of the controller"
+      Key:
+        type: "string"
+        description: "Access key from RegisterControllerRequest for requests authentication"
+      ErrorTime:
+        type: "string"
+        description: "UID of the controller"
+      Msg:
+        type: "string"
+        description: "Error message"
+  GetItemsRequest:
+    type: "object"
+    properties:
+      UID:
+        type: "string"
+        description: "UID of the controller"
+      Key:
+        type: "string"
+        description: "Access key from RegisterControllerRequest for requests authentication"
+  GetItemsResponse:
+    type: "array"
+    items:
+      $ref: "#/definitions/SaleItem"
+  RegisterStateRequest:
+    type: "object"
+    properties:
+      UID:
+        type: "string"
+        description: "UID of the controller"
+      Key:
+        type: "string"
+        description: "Access key from RegisterControllerRequest for requests authentication"
+      state:
+        $ref: '#/definitions/VendingState'
+  RegisterStateResponse:
+    type: "object"
+    properties:
+    #TODO
+      OK:
+        type: "string"
+        description: "OK"
+  ErrorResponse:
+    type: "object"
+    properties:
+      msg:
+        type: "string"
+        description: "Error string"
+  SaleItem:
+    type: "object"
+    properties:
+      id:
+        type: "number"
+        description: "Id of the item"
+      price:
+        type: "number"
+        format: "float"
+        description: "Item price"
+  VendingState:
+    type: "object"
+    properties:
+      ch:
+        type: "number"
+        format: "int32"
+        description: "State of the coin acceptor. 0 - not enabled, 1 - OK, 2 - error"
+      bh:
+        type: "number"
+        format: "int32"
+        description: "State of the bill acceptor. 0 - not enabled, 1 - OK, 2 - error"
+      cv:
+        type: "number"
+        format: "int32"
+        description: "Amount of money in the coin acceptor"
+      bv:
+        type: "number"
+        format: "int32"
+        description: "Amount of money in the bill acceptor"
+      bus:
+        type: "string"
+        description: "State of the buses"
+      ms:
+        type: "number"
+        format: "int32"
+        description: "Signal strength of the modem (3G). 0 - bad, 1 - medium, 2 - good"
