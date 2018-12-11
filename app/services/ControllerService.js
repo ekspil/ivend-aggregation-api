@@ -17,7 +17,7 @@ class ControllerService {
     async getControllerByUID(UID) {
         const query = ControllerModel
             .find({
-                UID: UID
+                uid: UID
             })
 
         return await query.findOne().exec()
