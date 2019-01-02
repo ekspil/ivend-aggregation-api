@@ -5,10 +5,10 @@ info:
   title: "iVend Aggregation API"
   contact:
     email: "pshenmic@gmail.com"
-host: "undefined"
+host: "https://aggregate.p-factory.ru"
 basePath: "/api/v1"
 schemes:
-  - "http"
+  - "https"
 tags:
 - name: "aggregate"
   description: "Aggregation API for aggregation data from the controllers"
