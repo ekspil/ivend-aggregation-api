@@ -19,15 +19,13 @@ class AggregationController {
 
     async registerController(ctx) {
         try {
-            const {UID} = ctx.request.body
+            const registerControllerRequest = new RegisterControllerRequest(ctx.request.body)
 
-            const validationResult = ValidationService.validateRegisterControllerRequest({UID})
+            const validationResult = ValidationService.validateRegisterControllerRequest(registerControllerRequest)
 
             if (validationResult.error) {
                 return await this.returnValidationError(ctx)
             }
-
-            const registerControllerRequest = new RegisterControllerRequest({UID})
 
             const controller = await this.controllerService.getControllerByUID(registerControllerRequest.UID)
 
@@ -36,7 +34,10 @@ class AggregationController {
                 return ctx.body = ""
             }
 
-            const {accessKey, mode} = controller
+            const {mode} = controller
+
+            const accessKey = await this.controllerService.authController(registerControllerRequest.UID)
+
             ctx.body = new RegisterControllerResponse({Key: accessKey, Mode: mode})
             ctx.status = 200
         }

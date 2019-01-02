@@ -1,5 +1,12 @@
 const ControllerModel = require("../models/mongoose/models/ControllerModel")
 const ControllerErrorModel = require("../models/mongoose/models/ControllerErrorModel")
+const {request, GraphQLClient} = require('graphql-request')
+// ... or create a GraphQL client instance to send requests
+const client = new GraphQLClient(process.env.GRAPHQL_API_URL, {
+    headers: {
+        "Authorization": "Basic dGVzdDp0ZXN0"
+    }
+})
 
 /**
  * ControllerService, maintains {Controller} entity
@@ -8,6 +15,7 @@ class ControllerService {
 
     constructor() {
         this.getControllerByUID = this.getControllerByUID.bind(this)
+        this.authController = this.authController.bind(this)
         this.addErrorToController = this.addErrorToController.bind(this)
     }
 
@@ -17,12 +25,39 @@ class ControllerService {
      * @returns {Promise<ControllerModel>}
      */
     async getControllerByUID(UID) {
-        const query = ControllerModel
-            .find({
-                uid: UID
-            })
+        const query = `
+        query {
+          controller(uid: "${UID}") {
+            uid
+            mode
+          }
+        }
+        `
+        const data = await client.request(query)
 
-        return await query.findOne().exec()
+        if (!data.controller) {
+            return null
+        }
+
+        return data.controller
+    }
+
+
+    /**
+     * Creates {Controller}
+     * @param UID {string}
+     * @returns {Promise<ControllerModel>}
+     */
+    async authController(UID) {
+        const query = `
+        mutation {
+          authController(uid: "${UID}") 
+        }
+        `
+
+        return await client.request(query)
+
+
     }
 
 
