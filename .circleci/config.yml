@@ -87,6 +87,3 @@ workflows:
                 - master
           requires:
             - build
-      - notify:
-          requires:
-            - deploy
