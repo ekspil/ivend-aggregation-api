@@ -19,6 +19,10 @@ ApiModule.getCallback = () => {
 }
 
 ApiModule.start = async (mongoDBURL) => {
+    if(!process.env.GRAPHQL_API_URL) {
+        throw new Error("Set up GRAPHQL_API_URL environment first")
+    }
+
     app.use(bodyParser())
 
     const aggregationController = new AggregationController()
