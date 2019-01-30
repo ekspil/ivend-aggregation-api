@@ -1,5 +1,3 @@
-const ControllerModel = require("../models/mongoose/models/ControllerModel")
-const ControllerErrorModel = require("../models/mongoose/models/ControllerErrorModel")
 const {request, GraphQLClient} = require('graphql-request')
 // ... or create a GraphQL client instance to send requests
 const client = new GraphQLClient(process.env.GRAPHQL_API_URL, {
