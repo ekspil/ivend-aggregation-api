@@ -2,7 +2,7 @@ const {request, GraphQLClient} = require('graphql-request')
 // ... or create a GraphQL client instance to send requests
 const client = new GraphQLClient(process.env.GRAPHQL_API_URL, {
     headers: {
-        "Authorization": "Basic dGVzdDp0ZXN0"
+        "Authorization": "Basic Y29udHJvbGxlcjpjb250cm9sbGVy"
     }
 })
 
@@ -25,12 +25,13 @@ class ControllerService {
     async getControllerByUID(UID) {
         const query = `
         query {
-          getControllerByUID(uid: "${UID}") {
+          controller: getControllerByUID(uid: "${UID}") {
             uid
             mode
           }
         }
         `
+
         const data = await client.request(query)
 
         if (!data.controller) {
@@ -49,13 +50,20 @@ class ControllerService {
     async authController(UID) {
         const query = `
         mutation {
-          authController(uid: "${UID}") 
+          authController(uid: "${UID}") {
+            accessKey
+            mode
+          }
         }
         `
 
-        return await client.request(query)
+        const data = await client.request(query)
 
+        if(!data.authController) {
+            return null
+        }
 
+        return data.authController
     }
 
 

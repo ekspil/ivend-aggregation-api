@@ -34,9 +34,7 @@ class AggregationController {
                 return ctx.body = ""
             }
 
-            const {mode} = controller
-
-            const accessKey = await this.controllerService.authController(registerControllerRequest.UID)
+            const {accessKey, mode} = await this.controllerService.authController(registerControllerRequest.UID)
 
             ctx.body = new RegisterControllerResponse({Key: accessKey, Mode: mode})
             ctx.status = 200
