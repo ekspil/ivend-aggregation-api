@@ -74,12 +74,12 @@ workflows:
               only:
                 - master
                 - develop
-      - test:
-          filters:
-            branches:
-              only:
-                - master
-                - develop
+      #- test:
+      #    filters:
+      #      branches:
+      #        only:
+      #          - master
+      #          - develop
       - deploy:
           filters:
             branches:
