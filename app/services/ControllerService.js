@@ -25,7 +25,7 @@ class ControllerService {
     async getControllerByUID(UID) {
         const query = `
         query {
-          controller(uid: "${UID}") {
+          getControllerByUID(uid: "${UID}") {
             uid
             mode
           }
