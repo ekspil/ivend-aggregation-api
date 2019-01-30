@@ -44,16 +44,6 @@ ApiModule.start = async (mongoDBURL) => {
 }
 
 ApiModule.stop = async () => {
-    async function stopMongoose() {
-        return new Promise((resolve) => {
-            mongoose.connection.close(function () {
-                console.log("Mongoose connection stopped")
-                resolve()
-            })
-        })
-    }
-
-    await stopMongoose()
 }
 
 module.exports = ApiModule
