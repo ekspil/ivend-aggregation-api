@@ -6,6 +6,7 @@ services:
       context: ./
     environment:
       - "NODE_ENV=production"
+      - "GRAPHQL_API_URL=${GRAPHQL_API_URL}"
     ports:
       - "3000:3000"
     deploy:
