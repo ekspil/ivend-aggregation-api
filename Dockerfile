@@ -1,5 +1,5 @@
 FROM node:11
-RUN mkdir /app/app
+RUN mkdir -p /app/app
 COPY package-lock.json /app
 COPY package.json /app
 COPY index.js /app
