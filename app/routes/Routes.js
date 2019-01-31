@@ -11,6 +11,7 @@ module.exports = function (injects) {
 
     router.post("/register/controller", aggregationController.registerController);
     router.post("/register/error", aggregationController.registerError);
+    router.post("/register/state", aggregationController.registerState);
 
     return router;
 }
