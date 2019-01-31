@@ -39,6 +39,23 @@ class ValidationService {
 
         return validationResult
     }
+    static validateRegisterStateRequest(registerStateRequest) {
+
+        const schema = Joi.object().keys({
+            UID: Joi.string().required(),
+            Key: Joi.string().required(),
+            State: Joi.object().keys({
+                ch: Joi.number().integer().min(0).max(2).required(),
+                bh: Joi.number().integer().min(0).max(2).required(),
+                cv: Joi.number().integer().min(0).required(),
+                bv: Joi.number().integer().min(0).required(),
+                bus: Joi.string().required().length(4),
+                ms: Joi.number().integer().min(0).max(2).required(),
+            }),
+        })
+
+        return Joi.validate(registerStateRequest, schema)
+    }
 
 }
 
