@@ -118,9 +118,9 @@ paths:
           $ref: "#/definitions/RegisterStateRequest"
       responses:
         200:
-          description: "Successfully registered error"
+          description: "Successfully registered state"
         400:
-          description: "Error while registering error"
+          description: "Error while registering state"
           schema:
             $ref: "#/definitions/RegisterStateResponse"
         500:
@@ -186,7 +186,7 @@ definitions:
       Key:
         type: "string"
         description: "Access key from RegisterControllerRequest for requests authentication"
-      state:
+      State:
         $ref: '#/definitions/VendingState'
   RegisterStateResponse:
     type: "object"
