@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   title: "iVend Aggregation API"
   description: "Aggregation API for aggregation data from the controllers. Receives telemetry from the vending controllers"
-  version: "1.0.0"
+  version: "1.0.1"
   contact:
     email: "pshenmic@gmail.com"
 host: "https://aggregate.p-factory.ru"
@@ -49,6 +49,7 @@ paths:
             -X POST \
             -H "Content-Type: application/json" \
             -d '{"UID": "MY_CONTROLLER_UID"}' \
+            -i \
             https://aggregation.p-factory.ru/api/v1/register/controller
   /register/sale:
     post:
@@ -77,6 +78,14 @@ paths:
           description: &controller_unauthenticated "Controller with such UID was not found or Key does not match"
         500:
           description: *internal_server_error
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"UID": "MY_CONTROLLER_UID"}' \
+            https://aggregation.p-factory.ru/api/v1/register/controller
   /register/error:
     post:
       tags:
