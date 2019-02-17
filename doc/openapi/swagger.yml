@@ -118,9 +118,7 @@ paths:
         200:
           description: "Successfully registered state"
         400:
-          description: "Error while registering state"
-          schema:
-            $ref: "#/definitions/RegisterStateResponse"
+          description: *invalid_request_body
         500:
           description: *internal_server_error
 definitions:
