@@ -2,7 +2,7 @@ const {request, GraphQLClient} = require('graphql-request')
 // ... or create a GraphQL client instance to send requests
 const client = new GraphQLClient(process.env.GRAPHQL_API_URL, {
     headers: {
-        "Authorization": "Basic Y29udHJvbGxlcjpjb250cm9sbGVy"
+        "Authorization": "Basic OTk5OTk5OTk5MTphZ2dyZWdhdG9y"
     }
 })
 
