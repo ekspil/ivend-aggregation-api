@@ -245,7 +245,7 @@ definitions:
         description: "Amount of money in the bill acceptor"
       bus:
         type: "string"
-        description: "State of the buses. String where each char represents state of this bus. Template: Ddem. D=DEX1, d=DEX2, e=EXE, m=MDB. Example: 1110"
+        description: "State of the buses. String (4 chars EXACTLY) where each char represents state of this bus. Template: Ddem. D=DEX1, d=DEX2, e=EXE, m=MDB. Example: 1110"
       ms:
         type: "number"
         format: "int32"
