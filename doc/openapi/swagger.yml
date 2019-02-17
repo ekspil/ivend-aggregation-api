@@ -202,7 +202,7 @@ definitions:
         type: "string"
         description: "Access key from RegisterControllerRequest for requests authentication"
       ErrorTime:
-        type: "number"
+        type: "String"
         description: "Error time, should be in UNIX timestamp in UTC timezone, See http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16"
       Msg:
         type: "string"
