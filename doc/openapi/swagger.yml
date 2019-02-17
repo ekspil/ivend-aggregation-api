@@ -188,13 +188,6 @@ definitions:
         description: "Access key from RegisterControllerRequest for requests authentication"
       State:
         $ref: '#/definitions/VendingState'
-  RegisterStateResponse:
-    type: "object"
-    properties:
-    #TODO
-      OK:
-        type: "string"
-        description: "OK"
   ErrorResponse:
     type: "object"
     properties:
