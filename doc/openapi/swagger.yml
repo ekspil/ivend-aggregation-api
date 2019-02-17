@@ -84,8 +84,9 @@ paths:
             curl \
             -X POST \
             -H "Content-Type: application/json" \
-            -d '{"UID": "MY_CONTROLLER_UID"}' \
-            https://aggregation.p-factory.ru/api/v1/register/controller
+            -d '{"UID": "MY_CONTROLLER_UID", "Key": "ACCESS_KEY", "CheckTime": "1550391249", "ButtonId": 0}' \
+            -i \
+            https://aggregation.p-factory.ru/api/v1/register/sale
   /register/error:
     post:
       tags:
@@ -113,6 +114,15 @@ paths:
           description: *controller_unauthenticated
         500:
           description: *internal_server_error
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"UID": "MY_CONTROLLER_UID", "Key": "ACCESS_KEY", "ErrorTime": "1550391249", "Msg": "BillAcceptor zajevalo"}' \
+            -i \
+            https://aggregation.p-factory.ru/api/v1/register/error
   /register/state:
     post:
       tags:
@@ -138,6 +148,15 @@ paths:
           description: *invalid_request_body
         500:
           description: *internal_server_error
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"UID": "MY_CONTROLLER_UID", "Key": "ACCESS_KEY", "State": {"ch": 1, "bh": 1, "cv": 250, "bv": 100, "bus":"1111", "ms": 2}}' \
+            -i \
+            https://aggregation.p-factory.ru/api/v1/register/error
 definitions:
   RegisterControllerRequest:
     type: "object"
@@ -169,7 +188,7 @@ definitions:
         description: "Access key from RegisterControllerRequest for requests authentication"
       CheckTime:
         type: "string"
-        description: "Receipt time in format DD.MM.YYYY hh:mm:ss"
+        description: "Receipt time. Should be in UNIX timestamp in UTC timezone, See http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16"
       ButtonId:
         description: "Button Id of the item matrix from the vending machine"
         type: "number"
@@ -226,7 +245,7 @@ definitions:
         description: "Amount of money in the bill acceptor"
       bus:
         type: "string"
-        description: "State of the buses"
+        description: "State of the buses. String where each char represents state of this bus. Template: Ddem. D=DEX1, d=DEX2, e=EXE, m=MDB. Example: 1110"
       ms:
         type: "number"
         format: "int32"
