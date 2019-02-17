@@ -1,2 +1,2 @@
 FROM redocly/redoc
-COPY openapi.yml /usr/share/nginx/html/
+COPY swagger.yml /usr/share/nginx/html/

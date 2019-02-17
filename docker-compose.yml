@@ -20,7 +20,7 @@ services:
     build:
       context: ./doc/openapi
     environment:
-      - "SPEC_URL=openapi.yml"
+      - "SPEC_URL=swagger.yml"
     ports:
       - "5000:80"
     deploy:
