@@ -67,8 +67,6 @@ paths:
           description: *invalid_request_body
         401:
           description: &controller_unauthenticated "Controller with such UID was not found or Key does not match"
-        404:
-          description: "One or more ids in the Items field does not exist"
         500:
           description: *internal_server_error
   /register/error:
