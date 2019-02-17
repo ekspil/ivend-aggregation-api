@@ -157,11 +157,9 @@ definitions:
       CheckTime:
         type: "string"
         description: "Receipt time in format DD.MM.YYYY hh:mm:ss"
-      Items:
-        description: "Array of IDs of the items"
-        type: array
-        items:
-          type: integer
+      ButtonId:
+        description: "Button Id of the item matrix from the vending machine"
+        type: "number"
   RegisterErrorRequest:
     type: "object"
     properties:
