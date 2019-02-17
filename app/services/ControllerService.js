@@ -131,16 +131,7 @@ class ControllerService {
         const errorTime = new Date(registerErrorRequest.ErrorTime)
         const {UID} = registerErrorRequest
 
-        const controller = await ControllerModel
-            .find({
-                uid: UID
-            })
-            .findOne()
-            .exec()
-
-        controller.controllerErrors.push(new ControllerErrorModel({errorTime, message: registerErrorRequest.Msg}));
-
-        return await controller.save()
+        throw new Error("Not implemented")
     }
 }
 
