@@ -3,6 +3,7 @@ const ValidationService = require("../services/ValidationService")
 const RegisterControllerRequest = require("../models/RegisterControllerRequest")
 const RegisterErrorRequest = require("../models/RegisterErrorRequest")
 const RegisterStateRequest = require("../models/RegisterStateRequest")
+const RegisterSaleRequest = require("../models/RegisterSaleRequest")
 const RegisterControllerResponse = require("../models/RegisterControllerResponse")
 
 
@@ -17,6 +18,7 @@ class AggregationController {
         this.registerController = this.registerController.bind(this)
         this.registerState = this.registerState.bind(this)
         this.registerError = this.registerError.bind(this)
+        this.registerSale = this.registerSale.bind(this)
     }
 
     async registerController(ctx) {
@@ -94,6 +96,33 @@ class AggregationController {
             }
 
             await this.controllerService.registerState(registerStateRequest)
+
+            ctx.body = ""
+            ctx.status = 200
+        }
+        catch (e) {
+            return this.returnInternalServerError(ctx, e)
+        }
+
+    }
+
+    async registerSale(ctx) {
+        try {
+            const registerStateRequest = new RegisterSaleRequest(ctx.request.body)
+
+            const validationResult = ValidationService.validateRegisterSaleRequest(registerStateRequest)
+
+            if (validationResult.error) {
+                return await this.returnValidationError(ctx)
+            }
+
+            const controller = await this.controllerService.getControllerByUID(registerStateRequest.UID)
+
+            if (!controller || (controller && controller.accessKey !== registerStateRequest.Key)) {
+                return this.returnUnauthenticated(ctx)
+            }
+
+            await this.controllerService.registerSale(registerStateRequest)
 
             ctx.body = ""
             ctx.status = 200

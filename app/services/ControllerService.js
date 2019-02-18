@@ -121,6 +121,37 @@ class ControllerService {
         }
     }
 
+    /**
+     * Registers the sale
+     * @param registerSaleRequest {RegisterSaleRequest}
+     * @returns {Promise<void>}
+     */
+    async registerSale(registerSaleRequest) {
+        const query = `
+        mutation($input: SaleEventInput!) {
+          registerSale(input: $input) {
+            id
+          }
+        }
+        `
+
+        const {UID, ButtonId} = registerSaleRequest
+
+
+        const variables = {
+            input: {
+                controllerUid: UID,
+                buttonId: ButtonId
+            }
+        }
+
+        const data = await client.request(query, variables)
+
+        if (!data.registerSale) {
+            throw new Error("Failed to update controller state, registerControllerState returned null")
+        }
+    }
+
 
     /**
      * Adds error to controller

@@ -57,6 +57,17 @@ class ValidationService {
         return Joi.validate(registerStateRequest, schema)
     }
 
+    static validateRegisterSaleRequest(registerSaleRequest) {
+        const schema = Joi.object().keys({
+            UID: Joi.string().required(),
+            Key: Joi.string().required(),
+            CheckTime: Joi.string().required(),
+            ButtonId: Joi.number().min(0).max(2)
+        })
+
+        return Joi.validate(registerSaleRequest, schema)
+    }
+
 }
 
 module.exports = ValidationService
