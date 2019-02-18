@@ -77,7 +77,7 @@ class ControllerService {
      */
     async registerState(registerStateRequest) {
         const query = `
-        mutation($input: ControllerStateInput) {
+        mutation($input: ControllerStateInput!) {
           registerControllerState(input: $input) {
             id
           }
