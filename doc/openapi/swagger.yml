@@ -156,7 +156,7 @@ paths:
             -H "Content-Type: application/json" \
             -d '{"UID": "MY_CONTROLLER_UID", "Key": "ACCESS_KEY", "FW": "20180731Std", "State": {"ch": 1, "bh": 1, "cv": 250, "bv": 100, "bus":"1111", "ms": 2}}' \
             -i \
-            https://aggregation.p-factory.ru/api/v1/register/error
+            https://aggregation.p-factory.ru/api/v1/register/state
 definitions:
   RegisterControllerRequest:
     type: "object"
@@ -205,7 +205,7 @@ definitions:
         type: "string"
         description: "Access key from RegisterControllerRequest for requests authentication"
       ErrorTime:
-        type: "String"
+        type: "string"
         description: "Error time, should be in UNIX timestamp in UTC timezone, See http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16"
       Msg:
         type: "string"
@@ -224,12 +224,6 @@ definitions:
         description: "Firmware version of the controller"
       State:
         $ref: '#/definitions/VendingState'
-  ErrorResponse:
-    type: "object"
-    properties:
-      msg:
-        type: "string"
-        description: "Error string"
   VendingState:
     type: "object"
     properties:
