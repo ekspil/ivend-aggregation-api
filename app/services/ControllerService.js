@@ -14,7 +14,8 @@ class ControllerService {
     constructor() {
         this.getControllerByUID = this.getControllerByUID.bind(this)
         this.authController = this.authController.bind(this)
-        this.addErrorToController = this.addErrorToController.bind(this)
+        this.registerError = this.registerError.bind(this)
+        this.registerSale = this.registerSale.bind(this)
         this.registerState = this.registerState.bind(this)
     }
 
@@ -62,8 +63,8 @@ class ControllerService {
 
         const data = await client.request(query)
 
-        if(!data.authController) {
-            return null
+        if (!data.authController) {
+            throw new Error("Failed to auth controller, authController returned null")
         }
 
         return data.authController
@@ -162,21 +163,41 @@ class ControllerService {
         const data = await client.request(query, variables)
 
         if (!data.registerSale) {
-            throw new Error("Failed to update controller state, registerControllerState returned null")
+            throw new Error("Failed to register sale, registerSale returned null")
         }
     }
 
 
     /**
-     * Adds error to controller
+     * Registers the controller error
      * @param registerErrorRequest {RegisterErrorRequest}
      * @returns {Promise<ControllerModel>}
      */
-    async addErrorToController(registerErrorRequest) {
-        const errorTime = new Date(registerErrorRequest.ErrorTime)
-        const {UID} = registerErrorRequest
+    async registerError(registerErrorRequest) {
+        const query = `
+        mutation($input: ControllerErrorInput!) {
+          registerControllerError(input: $input) {
+            id
+          }
+        }
+        `
 
-        throw new Error("Not implemented")
+        const {UID, ErrorTime, Msg} = registerErrorRequest
+
+
+        const variables = {
+            input: {
+                controllerUid: UID,
+                message: Msg,
+                errorTime: Number(ErrorTime)
+            }
+        }
+
+        const data = await client.request(query, variables)
+
+        if (!data.registerControllerError) {
+            throw new Error("Failed to register error, registerError returned null")
+        }
     }
 }
 
