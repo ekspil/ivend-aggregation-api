@@ -65,7 +65,7 @@ class AggregationController {
                 return this.returnUnauthenticated(ctx)
             }
 
-            await this.controllerService.addErrorToController(registerErrorRequest)
+            await this.controllerService.registerError(registerErrorRequest)
 
             ctx.body = ""
             ctx.status = 200
