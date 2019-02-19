@@ -51,15 +51,13 @@ class AggregationController {
 
     async registerError(ctx) {
         try {
-            const {UID, Key, ErrorTime, Msg} = ctx.request.body
+            const registerErrorRequest = new RegisterErrorRequest(ctx.request.body)
 
-            const validationResult = ValidationService.validateRegisterErrorRequest({UID, Key, ErrorTime, Msg})
+            const validationResult = ValidationService.validateRegisterErrorRequest(registerErrorRequest)
 
             if (validationResult.error) {
                 return await this.returnValidationError(ctx)
             }
-
-            const registerErrorRequest = new RegisterErrorRequest({UID, Key, ErrorTime, Msg})
 
             const controller = await this.controllerService.getControllerByUID(registerErrorRequest.UID)
 
@@ -80,8 +78,7 @@ class AggregationController {
 
     async registerState(ctx) {
         try {
-            const {UID, Key, State} = ctx.request.body
-            const registerStateRequest = new RegisterStateRequest({UID, Key, State})
+            const registerStateRequest = new RegisterStateRequest(ctx.request.body)
 
             const validationResult = ValidationService.validateRegisterStateRequest(registerStateRequest)
 
