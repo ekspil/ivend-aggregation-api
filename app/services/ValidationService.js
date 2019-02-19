@@ -62,6 +62,7 @@ class ValidationService {
         const schema = Joi.object().keys({
             UID: Joi.string().required(),
             Key: Joi.string().required(),
+            Pt: Joi.number().min(0).max(1).required(),
             CheckTime: Joi.string().required(),
             ButtonId: Joi.number().min(0).max(2)
         })

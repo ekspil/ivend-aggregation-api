@@ -84,7 +84,7 @@ paths:
             curl \
             -X POST \
             -H "Content-Type: application/json" \
-            -d '{"UID": "MY_CONTROLLER_UID", "Key": "ACCESS_KEY", "CheckTime": "1550391249", "ButtonId": 0}' \
+            -d '{"UID": "MY_CONTROLLER_UID", "Key": "ACCESS_KEY", "Pt": 0, "CheckTime": "1550391249", "ButtonId": 0}' \
             -i \
             https://aggregation.p-factory.ru/api/v1/register/sale
   /register/error:
@@ -186,6 +186,9 @@ definitions:
       Key:
         type: "string"
         description: "Access key from RegisterControllerRequest for requests authentication"
+      Pt:
+        type: "number"
+        description: "Type of the sale. 0 - CASH, 1 - CASHLESS"
       CheckTime:
         type: "string"
         description: "Receipt time. Should be in UNIX timestamp in UTC timezone, See http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16"

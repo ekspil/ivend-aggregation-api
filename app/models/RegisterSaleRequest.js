@@ -9,11 +9,12 @@ class RegisterSaleRequest {
      * @throws {Error} throws on invalid rawObj
      */
     constructor(rawObj) {
-        const {UID, Key, CheckTime, ButtonId} = rawObj
+        const {UID, Key, CheckTime, Pt, ButtonId} = rawObj
 
         this.UID = UID
         this.Key = Key
         this.CheckTime = CheckTime
+        this.Pt = Pt
         this.ButtonId = ButtonId
 
         if (!this.UID || !this.Key || !this.CheckTime || this.ButtonId === undefined) {

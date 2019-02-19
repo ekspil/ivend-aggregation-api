@@ -136,12 +136,25 @@ class ControllerService {
         }
         `
 
-        const {UID, ButtonId} = registerSaleRequest
+        const {UID, Pt, ButtonId} = registerSaleRequest
 
+        let type;
+
+        switch (Pt) {
+            case 0:
+                type = "CASH"
+                break
+            case 1:
+                type = "CASHLESS"
+                break
+            default:
+                throw new Error("Unknown payment type (Pt): " + Pt)
+        }
 
         const variables = {
             input: {
                 controllerUid: UID,
+                type,
                 buttonId: ButtonId
             }
         }

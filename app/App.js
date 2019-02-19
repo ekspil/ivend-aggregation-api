@@ -18,7 +18,7 @@ ApiModule.getCallback = () => {
     return app.callback()
 }
 
-ApiModule.start = async (mongoDBURL) => {
+ApiModule.start = async () => {
     if(!process.env.GRAPHQL_API_URL) {
         throw new Error("Set up GRAPHQL_API_URL environment first")
     }
