@@ -20,7 +20,7 @@ class ValidationService {
         const schema = Joi.object().keys({
             UID: Joi.string().required(),
             Key: Joi.string().required(),
-            ErrorTime: Joi.number().required(),
+            ErrorTime: Joi.string().required().regex(/^[0-9]{10,10}$/),
             Msg: Joi.string().required(),
         })
 
@@ -63,7 +63,7 @@ class ValidationService {
             UID: Joi.string().required(),
             Key: Joi.string().required(),
             Pt: Joi.number().min(0).max(1).required(),
-            CheckTime: Joi.string().required(),
+            CheckTime: Joi.string().required().regex(/^[0-9]{10,10}$/),
             ButtonId: Joi.number().min(0).max(2)
         })
 
