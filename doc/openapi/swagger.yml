@@ -154,7 +154,7 @@ paths:
             curl \
             -X POST \
             -H "Content-Type: application/json" \
-            -d '{"UID": "MY_CONTROLLER_UID", "Key": "ACCESS_KEY", "State": {"ch": 1, "bh": 1, "cv": 250, "bv": 100, "bus":"1111", "ms": 2}}' \
+            -d '{"UID": "MY_CONTROLLER_UID", "Key": "ACCESS_KEY", "FW": "20180731Std", "State": {"ch": 1, "bh": 1, "cv": 250, "bv": 100, "bus":"1111", "ms": 2}}' \
             -i \
             https://aggregation.p-factory.ru/api/v1/register/error
 definitions:
@@ -216,6 +216,9 @@ definitions:
       Key:
         type: "string"
         description: "Access key from RegisterControllerRequest for requests authentication"
+      FW:
+        type: "string"
+        description: "Firmware version of the controller"
       State:
         $ref: '#/definitions/VendingState'
   ErrorResponse:
