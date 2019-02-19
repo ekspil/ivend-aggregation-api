@@ -108,21 +108,21 @@ class AggregationController {
 
     async registerSale(ctx) {
         try {
-            const registerStateRequest = new RegisterSaleRequest(ctx.request.body)
+            const registerSaleRequest = new RegisterSaleRequest(ctx.request.body)
 
-            const validationResult = ValidationService.validateRegisterSaleRequest(registerStateRequest)
+            const validationResult = ValidationService.validateRegisterSaleRequest(registerSaleRequest)
 
             if (validationResult.error) {
                 return await this.returnValidationError(ctx)
             }
 
-            const controller = await this.controllerService.getControllerByUID(registerStateRequest.UID)
+            const controller = await this.controllerService.getControllerByUID(registerSaleRequest.UID)
 
-            if (!controller || (controller && controller.accessKey !== registerStateRequest.Key)) {
+            if (!controller || (controller && controller.accessKey !== registerSaleRequest.Key)) {
                 return this.returnUnauthenticated(ctx)
             }
 
-            await this.controllerService.registerSale(registerStateRequest)
+            await this.controllerService.registerSale(registerSaleRequest)
 
             ctx.body = ""
             ctx.status = 200
