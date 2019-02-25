@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aggregation-api-redoc-deployment
+  labels:
+    app: aggregation-api-redoc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aggregation-api-redoc
+  template:
+    metadata:
+      labels:
+        app: aggregation-api-redoc
+    spec:
+      containers:
+      - name: aggregation-api
+        image: registry.gitlab.com/pshenmic/ivend/aggregation-api-redoc
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: gitlabregistrycred
