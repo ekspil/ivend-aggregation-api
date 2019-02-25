@@ -23,23 +23,21 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
 
-  test:
+  build_and_push_docker:
     docker:
-      - image: circleci/node:11.1.0
-      - image: circleci/mongo:3.6.9-stretch
+      - image: docker:17.05.0-ce-git
 
     working_directory: ~/repo
 
     steps:
       - checkout
-
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
-          - v1-dependencies-{{ checksum "package.json" }}-
-          - v1-dependencies-
-
-      - run: MONGODB_URL=mongodb://localhost/aggregation_test npm test
+      - setup_remote_docker
+      - deploy:
+          name: Push application Docker image
+          command: |
+            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api" .
+            docker login registry.gitlab.com -u "pshenmic" -p "$GITLAB_TOKEN"
+            docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api"
 
   deploy:
     docker:
@@ -63,7 +61,7 @@ jobs:
 
       - run:
           name: Deploy
-          command: ssh root@$DEPLOY_SERVER 'source /opt/.env && cd /opt/aggregation-api && git pull && docker-compose up -d --build'
+          command: ssh root@$DEPLOY_SERVER 'source /opt/.env && cd /opt/aggregation-api && git pull && kubectl replace --force -f kube-config.yml'
 workflows:
   version: 2
   aggregation_api_deploy:
@@ -74,16 +72,17 @@ workflows:
               only:
                 - master
                 - develop
-      #- test:
-      #    filters:
-      #      branches:
-      #        only:
-      #          - master
-      #          - develop
-      - deploy:
+      - build_and_push_docker:
           filters:
             branches:
               only:
                 - master
           requires:
             - build
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build_and_push_docker
