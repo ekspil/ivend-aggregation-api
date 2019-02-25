@@ -62,9 +62,10 @@ class ValidationService {
         const schema = Joi.object().keys({
             UID: Joi.string().required(),
             Key: Joi.string().required(),
-            Pt: Joi.number().min(0).max(1).required(),
+            Price: Joi.number().required(),
+            Pt: Joi.number().integer().min(0).max(1).required(),
             CheckTime: Joi.string().required().regex(/^[0-9]{10,10}$/),
-            ButtonId: Joi.number().min(0).max(2)
+            ButtonId: Joi.number().integer().required()
         })
 
         return Joi.validate(registerSaleRequest, schema)

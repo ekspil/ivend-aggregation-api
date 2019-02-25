@@ -9,15 +9,16 @@ class RegisterSaleRequest {
      * @throws {Error} throws on invalid rawObj
      */
     constructor(rawObj) {
-        const {UID, Key, CheckTime, Pt, ButtonId} = rawObj
+        const {UID, Key, CheckTime, Price, Pt, ButtonId} = rawObj
 
         this.UID = UID
         this.Key = Key
         this.CheckTime = CheckTime
+        this.Price = Price
         this.Pt = Pt
         this.ButtonId = ButtonId
 
-        if (!this.UID || !this.Key || !this.CheckTime || this.ButtonId === undefined) {
+        if (!this.UID || !this.Key || !this.CheckTime || this.Price === undefined || this.Pt === undefined|| this.ButtonId === undefined) {
             throw new Error("Some required arguments omitted in RegisterSaleRequest")
         }
     }
