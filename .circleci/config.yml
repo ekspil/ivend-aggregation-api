@@ -23,7 +23,7 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
 
-  build_and_push_docker:
+  docker_push_tagged:
     docker:
       - image: docker:17.05.0-ce-git
 
@@ -35,11 +35,25 @@ jobs:
       - deploy:
           name: Push application Docker image
           command: |
-            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api" .
-            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api-redoc" ./doc/openapi
+            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api:$CIRCLE_TAG" .
             docker login registry.gitlab.com -u "pshenmic" -p "$GITLAB_TOKEN"
-            docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api"
-            docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api-redoc"
+            docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api:$CIRCLE_TAG"
+
+  docker_push_develop:
+    docker:
+      - image: docker:17.05.0-ce-git
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - setup_remote_docker
+      - deploy:
+          name: Push application Docker image
+          command: |
+            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api:develop" .
+            docker login registry.gitlab.com -u "pshenmic" -p "$GITLAB_TOKEN"
+            docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api:develop"
 
   deploy:
     docker:
@@ -68,6 +82,22 @@ jobs:
       - run:
           name: Deploy aggregation-api-redoc
           command: ssh root@$DEPLOY_SERVER 'source /opt/.env && cd /opt/aggregation-api && git pull && microk8s.kubectl replace --force -f redoc-kube-config.yml'
+
+  deploy_develop:
+    docker:
+      - image: circleci/node:11.1.0
+
+    working_directory: ~/repo
+
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "49:d0:99:ae:33:c3:33:11:f9:5c:9e:85:44:90:2b:78"
+
+      - run:
+          name: Deploy
+          command: ssh-keyscan -H $DEPLOY_SERVER >> ~/.ssh/known_hosts && ssh root@$DEPLOY_SERVER 'source /opt/.env && cd /opt/aggregation-api && git checkout develop && git pull && microk8s.kubectl replace --force -f development-aggregation-api-kube-config.yml'
+
 workflows:
   version: 2
   aggregation_api_deploy:
@@ -78,17 +108,25 @@ workflows:
               only:
                 - master
                 - develop
-      - build_and_push_docker:
+      - docker_push_tagged:
           filters:
             branches:
-              only:
-                - master
+              ignore: /.*/
+            tags:
+              only: /.*/
           requires:
             - build
-      - deploy:
+      - docker_push_develop:
+          filters:
+            branches:
+              only: develop
+          requires:
+            - build
+      - deploy_develop:
           filters:
             branches:
               only:
-                - master
+                - develop
           requires:
-            - build_and_push_docker
+            - build
+            - docker_push_develop
