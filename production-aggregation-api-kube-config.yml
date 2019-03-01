@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aggregation-api
+  namespace: production
+  labels:
+    app: aggregation-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aggregation-api
+  template:
+    metadata:
+      namespace: production
+      labels:
+        app: aggregation-api
+    spec:
+      containers:
+      - name: aggregation-api
+        image: registry.gitlab.com/pshenmic/ivend/aggregation-api:1.0.0
+        ports:
+        - containerPort: 3000
+        envFrom:
+          - configMapRef:
+              name: aggregation-api-config
+      imagePullSecrets:
+      - name: gitlabregistrycred
