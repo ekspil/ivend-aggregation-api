@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: aggregation-api-redoc-deployment
+  namespace: development
   labels:
     app: aggregation-api-redoc
 spec:
@@ -11,6 +12,7 @@ spec:
       app: aggregation-api-redoc
   template:
     metadata:
+      namespace: development
       labels:
         app: aggregation-api-redoc
     spec:

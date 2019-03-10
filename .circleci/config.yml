@@ -68,7 +68,7 @@ jobs:
 
       - run:
           name: Deploy
-          command: ssh-keyscan -H $DEPLOY_SERVER >> ~/.ssh/known_hosts && ssh root@$DEPLOY_SERVER 'source /opt/.env && cd /opt/aggregation-api && git checkout develop && git pull && microk8s.kubectl replace --force -f development-aggregation-api-kube-config.yml'
+          command: ssh-keyscan -H $DEPLOY_SERVER >> ~/.ssh/known_hosts && ssh root@$DEPLOY_SERVER 'source /opt/.env && cd /opt/aggregation-api && git checkout develop && git pull && microk8s.kubectl replace --force -f development-aggregation-api-kube-config.yml && microk8s.kubectl replace --force -f redoc-kube-config.yml'
 
   deploy_production:
     docker:
