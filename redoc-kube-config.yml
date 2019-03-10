@@ -19,6 +19,9 @@ spec:
       containers:
       - name: aggregation-api
         image: registry.gitlab.com/pshenmic/ivend/aggregation-api-redoc
+        env:
+        - name: SPEC_URL
+          value: "swagger.yml"
         ports:
         - containerPort: 80
       imagePullSecrets:
