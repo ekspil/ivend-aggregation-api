@@ -52,7 +52,7 @@ jobs:
           name: Push application Docker image
           command: |
             docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api:develop" .
-            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api-redoc" .
+            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api-redoc" ./doc/openapi
             docker login registry.gitlab.com -u "pshenmic" -p "$GITLAB_TOKEN"
             docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api:develop"
             docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api-redoc"
