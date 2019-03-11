@@ -19,6 +19,7 @@ spec:
       containers:
       - name: aggregation-api
         image: registry.gitlab.com/pshenmic/ivend/aggregation-api:develop
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
         envFrom:
