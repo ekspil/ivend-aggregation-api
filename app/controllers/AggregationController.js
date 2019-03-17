@@ -130,16 +130,19 @@ class AggregationController {
 
     }
     async returnValidationError(ctx) {
+        console.log(`400 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 400
         ctx.body = ""
     }
 
     async returnUnauthenticated(ctx) {
+        console.log(`401 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 401
         ctx.body = ""
     }
 
     async returnNotFound(ctx) {
+        console.log(`404 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 404
         ctx.body = ""
     }
