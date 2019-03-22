@@ -132,7 +132,8 @@ class ControllerService {
         const query = `
         mutation($input: SaleEventInput!) {
           registerSale(input: $input) {
-            id
+            id,
+            sqr
           }
         }
         `

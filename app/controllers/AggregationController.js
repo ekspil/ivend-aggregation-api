@@ -119,9 +119,15 @@ class AggregationController {
                 return this.returnUnauthenticated(ctx)
             }
 
-            await this.controllerService.registerSale(registerSaleRequest)
+            const sale = await this.controllerService.registerSale(registerSaleRequest)
+            const {sqr} = sale
 
-            ctx.body = ""
+            ctx.body = {
+                Check: {
+                    status: "OK",
+                    sqr
+                }
+            }
             ctx.status = 200
         }
         catch (e) {
