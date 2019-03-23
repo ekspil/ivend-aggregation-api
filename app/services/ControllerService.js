@@ -167,6 +167,8 @@ class ControllerService {
         if (!data.registerSale) {
             throw new Error("Failed to register sale, registerSale returned null")
         }
+
+        return data.registerSale
     }
 
 
