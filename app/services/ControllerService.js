@@ -47,21 +47,30 @@ class ControllerService {
 
 
     /**
-     * Creates {Controller}
-     * @param UID {string}
+     * Auths {Controller}
+     * @param registerControllerRequest {RegisterControllerRequest}
      * @returns {Promise<ControllerModel>}
      */
-    async authController(UID) {
+    async authController(registerControllerRequest) {
+        const {UID, FW} = registerControllerRequest
+
         const query = `
-        mutation {
-          authController(uid: "${UID}") {
+        mutation($input: AuthControllerInput!) {
+          authController(input: $input) {
             accessKey
             mode
           }
         }
         `
 
-        const data = await client.request(query)
+        const variables = {
+            input: {
+                controllerUid: UID,
+                firmwareId: FW,
+            }
+        }
+
+        const data = await client.request(query, variables)
 
         if (!data.authController) {
             throw new Error("Failed to auth controller, authController returned null")

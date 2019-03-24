@@ -6,9 +6,9 @@ class ValidationService {
     }
 
     static validateRegisterControllerRequest(registerControllerRequest) {
-
         const schema = Joi.object().keys({
             UID: Joi.string().required(),
+            FW: Joi.string().required(),
         })
 
         return Joi.validate(registerControllerRequest, schema)
@@ -44,7 +44,6 @@ class ValidationService {
         const schema = Joi.object().keys({
             UID: Joi.string().required(),
             Key: Joi.string().required(),
-            FW: Joi.string().required(),
             State: Joi.object().keys({
                 ch: Joi.number().integer().min(0).max(2).required(),
                 bh: Joi.number().integer().min(0).max(2).required(),

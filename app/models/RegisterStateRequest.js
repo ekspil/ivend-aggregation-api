@@ -9,14 +9,13 @@ class RegisterStateRequest {
      * @throws {Error} throws on invalid rawObj
      */
     constructor(rawObj) {
-        const {UID, Key, State, FW} = rawObj
+        const {UID, Key, State} = rawObj
         this.UID = UID || null
         this.Key = Key || null
         this.State = State || null
-        this.FW = FW || null
 
-        if (!UID || !Key || !State || !FW) {
-            throw new Error("UID and Key and State and FW are required")
+        if (!UID || !Key || !State) {
+            throw new Error("UID and Key and State are required")
         }
     }
 }

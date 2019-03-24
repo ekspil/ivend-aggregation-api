@@ -31,14 +31,7 @@ class AggregationController {
                 return await this.returnValidationError(ctx)
             }
 
-            const controller = await this.controllerService.getControllerByUID(registerControllerRequest.UID)
-
-            if (!controller) {
-                ctx.status = 404
-                return ctx.body = ""
-            }
-
-            const {accessKey, mode} = await this.controllerService.authController(registerControllerRequest.UID)
+            const {accessKey, mode} = await this.controllerService.authController(registerControllerRequest)
 
             const now = new Date()
 
