@@ -112,7 +112,6 @@ class ControllerService {
         const variables = {
             input: {
                 controllerUid: registerStateRequest.UID,
-                firmwareId: registerStateRequest.FW,
                 coinAcceptorStatus: BusStatusMap[ch],
                 billAcceptorStatus: BusStatusMap[bh],
                 coinAmount: cv,
