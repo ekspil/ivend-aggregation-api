@@ -23,9 +23,9 @@ class AggregationController {
 
     async registerController(ctx) {
         try {
-            const registerControllerRequest = new RegisterControllerRequest(ctx.request.body)
+            const validationResult = ValidationService.validateRegisterControllerRequest(ctx.request.body)
 
-            const validationResult = ValidationService.validateRegisterControllerRequest(registerControllerRequest)
+            const registerControllerRequest = new RegisterControllerRequest(ctx.request.body)
 
             if (validationResult.error) {
                 return await this.returnValidationError(ctx)
@@ -40,7 +40,20 @@ class AggregationController {
 
             const {accessKey, mode} = await this.controllerService.authController(registerControllerRequest.UID)
 
-            ctx.body = new RegisterControllerResponse({Key: accessKey, Mode: mode})
+            const now = new Date()
+
+            const date = {
+                year: (now.getFullYear() + '').padStart(2, 0),
+                month: ((now.getMonth() + 1) + '').padStart(2, 0),
+                date: (now.getDate() + '').padStart(2, 0),
+                hours: (now.getHours() + '').padStart(2, 0),
+                minutes: (now.getMinutes() + '').padStart(2, 0),
+                seconds: (now.getSeconds() + '').padStart(2, 0),
+            }
+
+            const SDT = `${date.year}-${date.month}-${date.date} ${date.hours}:${date.minutes}:${date.seconds}`
+
+            ctx.body = new RegisterControllerResponse({Key: accessKey, Mode: mode, SDT})
             ctx.status = 200
         }
         catch (e) {
