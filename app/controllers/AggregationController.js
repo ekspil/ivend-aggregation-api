@@ -31,17 +31,17 @@ class AggregationController {
                 return await this.returnValidationError(ctx)
             }
 
-            const {accessKey, mode} = await this.controllerService.authController(registerControllerRequest)
+            const {accessKey, mode, registrationTime} = await this.controllerService.authController(registerControllerRequest)
 
-            const now = new Date()
+            const time = new Date(registrationTime)
 
             const date = {
-                year: (now.getFullYear() + '').padStart(2, 0),
-                month: ((now.getMonth() + 1) + '').padStart(2, 0),
-                date: (now.getDate() + '').padStart(2, 0),
-                hours: (now.getHours() + '').padStart(2, 0),
-                minutes: (now.getMinutes() + '').padStart(2, 0),
-                seconds: (now.getSeconds() + '').padStart(2, 0),
+                year: (time.getFullYear() + '').padStart(2, 0),
+                month: ((time.getMonth() + 1) + '').padStart(2, 0),
+                date: (time.getDate() + '').padStart(2, 0),
+                hours: (time.getHours() + '').padStart(2, 0),
+                minutes: (time.getMinutes() + '').padStart(2, 0),
+                seconds: (time.getSeconds() + '').padStart(2, 0),
             }
 
             const SDT = `${date.year}-${date.month}-${date.date} ${date.hours}:${date.minutes}:${date.seconds}`

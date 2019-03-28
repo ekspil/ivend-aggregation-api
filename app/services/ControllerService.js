@@ -59,6 +59,7 @@ class ControllerService {
           authController(input: $input) {
             accessKey
             mode
+            registrationTime
           }
         }
         `
