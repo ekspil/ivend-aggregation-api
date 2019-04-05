@@ -125,6 +125,10 @@ class AggregationController {
                 return this.returnUnauthenticated(ctx)
             }
 
+            if (!controller.machine) {
+                return this.returnMachineNotFound(ctx)
+            }
+
             const sale = await this.controllerService.registerSale(registerSaleRequest)
             const {sqr} = sale
 
@@ -141,6 +145,13 @@ class AggregationController {
         }
 
     }
+
+    async returnMachineNotFound(ctx) {
+        console.log(`412 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        ctx.status = 412
+        ctx.body = ""
+    }
+
     async returnValidationError(ctx) {
         console.log(`400 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 400
