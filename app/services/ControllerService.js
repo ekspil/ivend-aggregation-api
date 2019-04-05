@@ -31,6 +31,9 @@ class ControllerService {
             uid
             mode
             accessKey
+            machine {
+                id
+            }
           }
         }
         `
