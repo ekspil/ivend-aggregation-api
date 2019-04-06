@@ -57,13 +57,13 @@ class AggregationController {
 
     async registerError(ctx) {
         try {
-            const registerErrorRequest = new RegisterErrorRequest(ctx.request.body)
-
-            const validationResult = ValidationService.validateRegisterErrorRequest(registerErrorRequest)
+            const validationResult = ValidationService.validateRegisterErrorRequest(ctx.request.body)
 
             if (validationResult.error) {
                 return await this.returnValidationError(ctx)
             }
+
+            const registerErrorRequest = new RegisterErrorRequest(ctx.request.body)
 
             const controller = await this.controllerService.getControllerByUID(registerErrorRequest.UID)
 
@@ -84,13 +84,13 @@ class AggregationController {
 
     async registerState(ctx) {
         try {
-            const registerStateRequest = new RegisterStateRequest(ctx.request.body)
-
-            const validationResult = ValidationService.validateRegisterStateRequest(registerStateRequest)
+            const validationResult = ValidationService.validateRegisterStateRequest(ctx.request.body)
 
             if (validationResult.error) {
                 return await this.returnValidationError(ctx)
             }
+
+            const registerStateRequest = new RegisterStateRequest(ctx.request.body)
 
             const controller = await this.controllerService.getControllerByUID(registerStateRequest.UID)
 
@@ -111,13 +111,13 @@ class AggregationController {
 
     async registerSale(ctx) {
         try {
-            const registerSaleRequest = new RegisterSaleRequest(ctx.request.body)
-
-            const validationResult = ValidationService.validateRegisterSaleRequest(registerSaleRequest)
+            const validationResult = ValidationService.validateRegisterSaleRequest(ctx.request.body)
 
             if (validationResult.error) {
                 return await this.returnValidationError(ctx)
             }
+
+            const registerSaleRequest = new RegisterSaleRequest(ctx.request.body)
 
             const controller = await this.controllerService.getControllerByUID(registerSaleRequest.UID)
 
