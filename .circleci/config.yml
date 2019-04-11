@@ -78,7 +78,7 @@ jobs:
             cd /opt/aggregation-api && \
             git checkout develop && \
             git pull && \
-            envsubst < development-kube-config.yml > /tmp/development-kube-config.yml.patched && \
+            envsubst < development-aggregation-api-kube-config.yml > /tmp/development-aggregation-api-kube-config.yml.patched && \
             microk8s.kubectl apply -f /tmp/development-aggregation-api-kube-config.yml.patched && \
             microk8s.kubectl replace --force -f redoc-kube-config.yml'
 
