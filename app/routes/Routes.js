@@ -13,6 +13,10 @@ module.exports = function (injects) {
     router.post("/register/error", aggregationController.registerError);
     router.post("/register/state", aggregationController.registerState);
     router.post("/register/sale", aggregationController.registerSale);
+    router.get("/status", (ctx) => {
+        ctx.status = 200
+        ctx.body = {health: "OK"}
+    });
 
     return router;
 }
