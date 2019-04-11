@@ -51,10 +51,10 @@ jobs:
       - deploy:
           name: Push application Docker image
           command: |
-            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api:develop" .
+            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api:$CIRCLE_SHA1" .
             docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api-redoc" ./doc/openapi
             docker login registry.gitlab.com -u "pshenmic" -p "$GITLAB_TOKEN"
-            docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api:develop"
+            docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api:$CIRCLE_SHA1"
             docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api-redoc"
 
   deploy_develop:
@@ -70,7 +70,17 @@ jobs:
 
       - run:
           name: Deploy
-          command: ssh-keyscan -H $DEPLOY_SERVER >> ~/.ssh/known_hosts && ssh root@$DEPLOY_SERVER 'source /opt/.env && cd /opt/aggregation-api && git checkout develop && git pull && microk8s.kubectl replace --force -f development-aggregation-api-kube-config.yml && microk8s.kubectl replace --force -f redoc-kube-config.yml'
+          command: |
+            ssh-keyscan -H $DEPLOY_SERVER >> ~/.ssh/known_hosts &&
+            echo "CIRCLE_SHA1=$CIRCLE_SHA1" > ./sshenv &&
+            scp ./sshenv root@$DEPLOY_SERVER:~/.ssh/environment &&
+            ssh root@$DEPLOY_SERVER 'source /opt/.env && \
+            cd /opt/aggregation-api && \
+            git checkout develop && \
+            git pull && \
+            envsubst < development-kube-config.yml > /tmp/development-kube-config.yml.patched && \
+            microk8s.kubectl apply -f /tmp/development-aggregation-api-kube-config.yml.patched && \
+            microk8s.kubectl replace --force -f redoc-kube-config.yml'
 
   deploy_production:
     docker:
