@@ -50,6 +50,13 @@ class AggregationController {
             ctx.status = 200
         }
         catch (e) {
+            if (e && e.response && Array.isArray(e.response.errors) && e.response.errors[0] && e.response.errors[0].message) {
+                const {message} = e.response.errors[0]
+                if (message === "Controller not found") {
+                    return this.returnNotFound(ctx)
+                }
+            }
+
             return this.returnInternalServerError(ctx, e)
         }
 
