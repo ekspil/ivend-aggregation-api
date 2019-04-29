@@ -7,6 +7,11 @@ metadata:
     app: aggregation-api
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 50%
+      maxSurge: 50%
   selector:
     matchLabels:
       app: aggregation-api
@@ -18,9 +23,17 @@ spec:
     spec:
       containers:
       - name: aggregation-api
-        image: registry.gitlab.com/pshenmic/ivend/aggregation-api:develop
+        image: registry.gitlab.com/pshenmic/ivend/aggregation-api:$CIRCLE_SHA1
         ports:
-        - containerPort: 3000
+          - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /api/v1/status
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
         envFrom:
           - configMapRef:
               name: aggregation-api-config

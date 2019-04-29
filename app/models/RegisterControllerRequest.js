@@ -9,11 +9,12 @@ class RegisterControllerRequest {
      * @throws {Error} throws on invalid rawObj
      */
     constructor(rawObj) {
-        const {UID} = rawObj
+        const {UID, FW} = rawObj
         this.UID = UID || null
+        this.FW = FW || null
 
-        if (!this.UID) {
-            throw new Error("UID is required")
+        if (!this.UID || !this.FW) {
+            throw new Error("UID and FW are required")
         }
     }
 }

@@ -2,7 +2,7 @@ const {request, GraphQLClient} = require('graphql-request')
 // ... or create a GraphQL client instance to send requests
 const client = new GraphQLClient(process.env.GRAPHQL_API_URL, {
     headers: {
-        "Authorization": "Basic OTk5OTk5OTk5MTphZ2dyZWdhdG9y"
+        Authorization: process.env.AUTH_HEADER_STRING
     }
 })
 
@@ -31,6 +31,9 @@ class ControllerService {
             uid
             mode
             accessKey
+            machine {
+                id
+            }
           }
         }
         `
@@ -47,21 +50,31 @@ class ControllerService {
 
 
     /**
-     * Creates {Controller}
-     * @param UID {string}
+     * Auths {Controller}
+     * @param registerControllerRequest {RegisterControllerRequest}
      * @returns {Promise<ControllerModel>}
      */
-    async authController(UID) {
+    async authController(registerControllerRequest) {
+        const {UID, FW} = registerControllerRequest
+
         const query = `
-        mutation {
-          authController(uid: "${UID}") {
+        mutation($input: AuthControllerInput!) {
+          authController(input: $input) {
             accessKey
             mode
+            registrationTime
           }
         }
         `
 
-        const data = await client.request(query)
+        const variables = {
+            input: {
+                controllerUid: UID,
+                firmwareId: FW,
+            }
+        }
+
+        const data = await client.request(query, variables)
 
         if (!data.authController) {
             throw new Error("Failed to auth controller, authController returned null")
@@ -103,7 +116,6 @@ class ControllerService {
         const variables = {
             input: {
                 controllerUid: registerStateRequest.UID,
-                firmwareId: registerStateRequest.FW,
                 coinAcceptorStatus: BusStatusMap[ch],
                 billAcceptorStatus: BusStatusMap[bh],
                 coinAmount: cv,
@@ -132,7 +144,8 @@ class ControllerService {
         const query = `
         mutation($input: SaleEventInput!) {
           registerSale(input: $input) {
-            id
+            id,
+            sqr
           }
         }
         `
@@ -166,6 +179,8 @@ class ControllerService {
         if (!data.registerSale) {
             throw new Error("Failed to register sale, registerSale returned null")
         }
+
+        return data.registerSale
     }
 
 

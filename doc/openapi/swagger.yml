@@ -5,7 +5,7 @@ info:
   version: "1.0.1"
   contact:
     email: "pshenmic@gmail.com"
-host: "https://aggregate.p-factory.ru"
+host: "aggregate.p-factory.ru"
 basePath: "/api/v1"
 schemes:
   - "https"

@@ -23,27 +23,40 @@ class AggregationController {
 
     async registerController(ctx) {
         try {
-            const registerControllerRequest = new RegisterControllerRequest(ctx.request.body)
+            const validationResult = ValidationService.validateRegisterControllerRequest(ctx.request.body)
 
-            const validationResult = ValidationService.validateRegisterControllerRequest(registerControllerRequest)
+            const registerControllerRequest = new RegisterControllerRequest(ctx.request.body)
 
             if (validationResult.error) {
                 return await this.returnValidationError(ctx)
             }
 
-            const controller = await this.controllerService.getControllerByUID(registerControllerRequest.UID)
+            const {accessKey, mode, registrationTime} = await this.controllerService.authController(registerControllerRequest)
 
-            if (!controller) {
-                ctx.status = 404
-                return ctx.body = ""
+            const time = new Date(registrationTime)
+
+            const date = {
+                year: (time.getFullYear() + '').padStart(2, 0),
+                month: ((time.getMonth() + 1) + '').padStart(2, 0),
+                date: (time.getDate() + '').padStart(2, 0),
+                hours: (time.getHours() + '').padStart(2, 0),
+                minutes: (time.getMinutes() + '').padStart(2, 0),
+                seconds: (time.getSeconds() + '').padStart(2, 0),
             }
 
-            const {accessKey, mode} = await this.controllerService.authController(registerControllerRequest.UID)
+            const SDT = `${date.year}-${date.month}-${date.date} ${date.hours}:${date.minutes}:${date.seconds}`
 
-            ctx.body = new RegisterControllerResponse({Key: accessKey, Mode: mode})
+            ctx.body = new RegisterControllerResponse({Key: accessKey, Mode: mode, SDT})
             ctx.status = 200
         }
         catch (e) {
+            if (e && e.response && Array.isArray(e.response.errors) && e.response.errors[0] && e.response.errors[0].message) {
+                const {message} = e.response.errors[0]
+                if (message === "Controller not found") {
+                    return this.returnNotFound(ctx)
+                }
+            }
+
             return this.returnInternalServerError(ctx, e)
         }
 
@@ -51,13 +64,13 @@ class AggregationController {
 
     async registerError(ctx) {
         try {
-            const registerErrorRequest = new RegisterErrorRequest(ctx.request.body)
-
-            const validationResult = ValidationService.validateRegisterErrorRequest(registerErrorRequest)
+            const validationResult = ValidationService.validateRegisterErrorRequest(ctx.request.body)
 
             if (validationResult.error) {
                 return await this.returnValidationError(ctx)
             }
+
+            const registerErrorRequest = new RegisterErrorRequest(ctx.request.body)
 
             const controller = await this.controllerService.getControllerByUID(registerErrorRequest.UID)
 
@@ -78,13 +91,13 @@ class AggregationController {
 
     async registerState(ctx) {
         try {
-            const registerStateRequest = new RegisterStateRequest(ctx.request.body)
-
-            const validationResult = ValidationService.validateRegisterStateRequest(registerStateRequest)
+            const validationResult = ValidationService.validateRegisterStateRequest(ctx.request.body)
 
             if (validationResult.error) {
                 return await this.returnValidationError(ctx)
             }
+
+            const registerStateRequest = new RegisterStateRequest(ctx.request.body)
 
             const controller = await this.controllerService.getControllerByUID(registerStateRequest.UID)
 
@@ -98,6 +111,20 @@ class AggregationController {
             ctx.status = 200
         }
         catch (e) {
+            if (e && e.response && Array.isArray(e.response.errors) && e.response.errors[0] && e.response.errors[0].message) {
+                const {message} = e.response.errors[0]
+                if (message === "Controller not found") {
+                    return this.returnNotFound(ctx)
+                }
+            }
+
+            if (e && e.response && Array.isArray(e.response.errors) && e.response.errors[0] && e.response.errors[0].message) {
+                const {message} = e.response.errors[0]
+                if (message === "Machine not found") {
+                    return this.returnMachineNotFound(ctx)
+                }
+            }
+
             return this.returnInternalServerError(ctx, e)
         }
 
@@ -105,13 +132,13 @@ class AggregationController {
 
     async registerSale(ctx) {
         try {
-            const registerSaleRequest = new RegisterSaleRequest(ctx.request.body)
-
-            const validationResult = ValidationService.validateRegisterSaleRequest(registerSaleRequest)
+            const validationResult = ValidationService.validateRegisterSaleRequest(ctx.request.body)
 
             if (validationResult.error) {
                 return await this.returnValidationError(ctx)
             }
+
+            const registerSaleRequest = new RegisterSaleRequest(ctx.request.body)
 
             const controller = await this.controllerService.getControllerByUID(registerSaleRequest.UID)
 
@@ -119,27 +146,54 @@ class AggregationController {
                 return this.returnUnauthenticated(ctx)
             }
 
-            await this.controllerService.registerSale(registerSaleRequest)
+            if (!controller.machine) {
+                return this.returnMachineNotFound(ctx)
+            }
 
-            ctx.body = ""
+            const sale = await this.controllerService.registerSale(registerSaleRequest)
+            const {sqr} = sale
+
+            ctx.body = {
+                Check: {
+                    status: "OK",
+                    sqr
+                }
+            }
             ctx.status = 200
         }
         catch (e) {
+            if (e && e.response && Array.isArray(e.response.errors) && e.response.errors[0] && e.response.errors[0].message) {
+                const {message} = e.response.errors[0]
+                if (message === "Machine not found") {
+                    return this.returnMachineNotFound(ctx)
+                }
+            }
+
             return this.returnInternalServerError(ctx, e)
         }
 
     }
+
+    async returnMachineNotFound(ctx) {
+        console.log(`412 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        ctx.status = 412
+        ctx.body = ""
+    }
+
     async returnValidationError(ctx) {
+        console.log(`400 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 400
         ctx.body = ""
     }
 
     async returnUnauthenticated(ctx) {
+        console.log(`401 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 401
         ctx.body = ""
     }
 
     async returnNotFound(ctx) {
+        console.log(`404 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 404
         ctx.body = ""
     }
