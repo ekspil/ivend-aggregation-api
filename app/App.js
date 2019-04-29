@@ -10,7 +10,7 @@ const mongoose = require("mongoose")
 const app = new Koa()
 
 ApiModule.listen = (port) => {
-    app.listen(port)
+    app.listen(port, "0.0.0.0")
         .on("error", (err) => console.error(err))
 }
 
