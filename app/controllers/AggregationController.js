@@ -6,6 +6,8 @@ const RegisterStateRequest = require("../models/RegisterStateRequest")
 const RegisterSaleRequest = require("../models/RegisterSaleRequest")
 const RegisterControllerResponse = require("../models/RegisterControllerResponse")
 
+const logger = require("my-custom-logger")
+
 /* eslint require-atomic-updates: 0 */
 
 class AggregationController {
@@ -176,34 +178,34 @@ class AggregationController {
     }
 
     async returnMachineNotFound(ctx) {
-        console.log(`412 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        logger.error(`412 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 412
         ctx.body = ""
     }
 
     async returnValidationError(ctx) {
-        console.log(`400 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        logger.error(`400 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 400
         ctx.body = ""
     }
 
     async returnUnauthenticated(ctx) {
-        console.log(`401 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        logger.error(`401 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 401
         ctx.body = ""
     }
 
     async returnNotFound(ctx) {
-        console.log(`404 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        logger.error(`404 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 404
         ctx.body = ""
     }
 
     async returnInternalServerError(ctx, e) {
-        console.log("body: ", JSON.stringify(ctx.request.body))
-        console.log("params: ", JSON.stringify(ctx.params))
-        console.error(e)
-        console.error(e.stack)
+        logger.error("body: ", JSON.stringify(ctx.request.body))
+        logger.error("params: ", JSON.stringify(ctx.params))
+        logger.error(e)
+        logger.error(e.stack)
         ctx.body = ""
         ctx.status = 500
     }
