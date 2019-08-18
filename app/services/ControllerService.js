@@ -1,4 +1,4 @@
-const {request, GraphQLClient} = require('graphql-request')
+const {GraphQLClient} = require("graphql-request")
 // ... or create a GraphQL client instance to send requests
 const client = new GraphQLClient(process.env.GRAPHQL_API_URL, {
     headers: {
@@ -152,7 +152,7 @@ class ControllerService {
 
         const {UID, Pt, Price, ButtonId} = registerSaleRequest
 
-        let type;
+        let type
 
         switch (Pt) {
             case 0:

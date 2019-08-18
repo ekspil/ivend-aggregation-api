@@ -6,6 +6,7 @@ const RegisterStateRequest = require("../models/RegisterStateRequest")
 const RegisterSaleRequest = require("../models/RegisterSaleRequest")
 const RegisterControllerResponse = require("../models/RegisterControllerResponse")
 
+/* eslint require-atomic-updates: 0 */
 
 class AggregationController {
 
@@ -13,7 +14,7 @@ class AggregationController {
      * AggregationController
      */
     constructor() {
-        this.controllerService = new ControllerService();
+        this.controllerService = new ControllerService()
 
         this.registerController = this.registerController.bind(this)
         this.registerState = this.registerState.bind(this)
@@ -36,12 +37,12 @@ class AggregationController {
             const time = new Date(registrationTime)
 
             const date = {
-                year: (time.getFullYear() + '').padStart(2, 0),
-                month: ((time.getMonth() + 1) + '').padStart(2, 0),
-                date: (time.getDate() + '').padStart(2, 0),
-                hours: (time.getHours() + '').padStart(2, 0),
-                minutes: (time.getMinutes() + '').padStart(2, 0),
-                seconds: (time.getSeconds() + '').padStart(2, 0),
+                year: (time.getFullYear() + "").padStart(2, 0),
+                month: ((time.getMonth() + 1) + "").padStart(2, 0),
+                date: (time.getDate() + "").padStart(2, 0),
+                hours: (time.getHours() + "").padStart(2, 0),
+                minutes: (time.getMinutes() + "").padStart(2, 0),
+                seconds: (time.getSeconds() + "").padStart(2, 0),
             }
 
             const SDT = `${date.year}-${date.month}-${date.date} ${date.hours}:${date.minutes}:${date.seconds}`
@@ -199,8 +200,8 @@ class AggregationController {
     }
 
     async returnInternalServerError(ctx, e) {
-        console.log('body: ', JSON.stringify(ctx.request.body))
-        console.log('params: ', JSON.stringify(ctx.params))
+        console.log("body: ", JSON.stringify(ctx.request.body))
+        console.log("params: ", JSON.stringify(ctx.params))
         console.error(e)
         console.error(e.stack)
         ctx.body = ""

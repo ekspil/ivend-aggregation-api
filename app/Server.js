@@ -1,4 +1,4 @@
-const App = require('./App')
+const App = require("./App")
 
 const server = {
 

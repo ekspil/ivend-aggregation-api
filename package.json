@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
@@ -21,10 +22,10 @@
     "koa": "^2.6.2",
     "koa-bodyparser": "^4.2.1",
     "koa-mount": "^4.0.0",
-    "koa-router": "^7.4.0",
-    "mongoose": "^5.3.14"
+    "koa-router": "^7.4.0"
   },
   "devDependencies": {
+    "eslint": "^6.1.0",
     "jest": "^23.6.0",
     "supertest": "^3.3.0"
   }

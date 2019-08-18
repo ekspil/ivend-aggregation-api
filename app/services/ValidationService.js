@@ -29,7 +29,7 @@ class ValidationService {
         try {
             const date = new Date(registerErrorRequest.ErrorTime)
 
-            if (!date instanceof Date || date.getFullYear() < 2000) {
+            if (!(date instanceof Date) || date.getFullYear() < 2000) {
                 throw new Error()
             }
 
