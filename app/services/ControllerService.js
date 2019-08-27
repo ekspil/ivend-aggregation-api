@@ -219,11 +219,11 @@ class ControllerService {
     /**
      * Registers the controller event
      * @param registerEventRequest {RegisterEventRequest}
-     * @returns {Promise<ControllerModel>}
+     * @returns {Promise<?>}
      */
     async registerEvent(registerEventRequest) {
         const query = `
-        mutation($input: ControllerErrorInput!) {
+        mutation($input: RegisterEventInput!) {
           registerEvent(input: $input) {
             id
           }
