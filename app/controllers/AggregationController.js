@@ -4,6 +4,7 @@ const RegisterControllerRequest = require("../models/RegisterControllerRequest")
 const RegisterErrorRequest = require("../models/RegisterErrorRequest")
 const RegisterStateRequest = require("../models/RegisterStateRequest")
 const RegisterSaleRequest = require("../models/RegisterSaleRequest")
+const RegisterEventRequest = require("../models/RegisterEventRequest")
 const RegisterControllerResponse = require("../models/RegisterControllerResponse")
 
 const logger = require("my-custom-logger")
@@ -22,6 +23,7 @@ class AggregationController {
         this.registerState = this.registerState.bind(this)
         this.registerError = this.registerError.bind(this)
         this.registerSale = this.registerSale.bind(this)
+        this.registerEvent = this.registerEvent.bind(this)
     }
 
     async registerController(ctx) {
@@ -146,6 +148,50 @@ class AggregationController {
             const controller = await this.controllerService.getControllerByUID(registerSaleRequest.UID)
 
             if (!controller || (controller && controller.accessKey !== registerSaleRequest.Key)) {
+                return this.returnUnauthenticated(ctx)
+            }
+
+            if (!controller.machine) {
+                return this.returnMachineNotFound(ctx)
+            }
+
+            const sale = await this.controllerService.registerSale(registerSaleRequest)
+            const {sqr} = sale
+
+            ctx.body = {
+                Check: {
+                    status: "OK",
+                    sqr
+                }
+            }
+            ctx.status = 200
+        }
+        catch (e) {
+            if (e && e.response && Array.isArray(e.response.errors) && e.response.errors[0] && e.response.errors[0].message) {
+                const {message} = e.response.errors[0]
+                if (message === "Machine not found") {
+                    return this.returnMachineNotFound(ctx)
+                }
+            }
+
+            return this.returnInternalServerError(ctx, e)
+        }
+
+    }
+
+    async registerEvent(ctx) {
+        try {
+            const validationResult = ValidationService.validateRegisterEventRequest(ctx.request.body)
+
+            if (validationResult.error) {
+                return await this.returnValidationError(ctx)
+            }
+
+            const registerEventRequest = new RegisterEventRequest(ctx.request.body)
+
+            const controller = await this.controllerService.getControllerByUID(registerEventRequest.UID)
+
+            if (!controller || (controller && controller.accessKey !== registerEventRequest.Key)) {
                 return this.returnUnauthenticated(ctx)
             }
 
