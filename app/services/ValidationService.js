@@ -75,7 +75,7 @@ class ValidationService {
             UID: Joi.string().required(),
             Key: Joi.string().required(),
             EventTime: Joi.number().required(),
-            Code: Joi.number().integer().min(0).max(1).required(),
+            Code: Joi.number().integer().min(1).max(2).required(),
         })
 
         return Joi.validate(registerEventRequest, schema)
