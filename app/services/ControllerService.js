@@ -215,6 +215,41 @@ class ControllerService {
             throw new Error("Failed to register error, registerError returned null")
         }
     }
+
+    /**
+     * Registers the controller event
+     * @param registerEventRequest {RegisterEventRequest}
+     * @returns {Promise<ControllerModel>}
+     */
+    async registerEvent(registerEventRequest) {
+        const query = `
+        mutation($input: ControllerErrorInput!) {
+          registerEvent(input: $input) {
+            id
+          }
+        }
+        `
+
+        const {UID, EventTime, Code, Key} = registerEventRequest
+
+        if(Code !== 2) {
+            throw new Error("Unknown event code")
+        }
+
+        const variables = {
+            input: {
+                controllerUid: UID,
+                eventType: "ENCASHMENT",
+                timestamp: Number(EventTime)
+            }
+        }
+
+        const data = await client.request(query, variables)
+
+        if (!data.registerEvent) {
+            throw new Error("Failed to register error, registerError returned null")
+        }
+    }
 }
 
 module.exports = ControllerService
