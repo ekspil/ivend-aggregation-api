@@ -199,15 +199,9 @@ class AggregationController {
                 return this.returnMachineNotFound(ctx)
             }
 
-            const sale = await this.controllerService.registerSale(registerSaleRequest)
-            const {sqr} = sale
+            await this.controllerService.registerEvent(registerEventRequest)
 
-            ctx.body = {
-                Check: {
-                    status: "OK",
-                    sqr
-                }
-            }
+            ctx.body = null
             ctx.status = 200
         }
         catch (e) {
