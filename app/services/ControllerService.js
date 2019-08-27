@@ -230,7 +230,7 @@ class ControllerService {
         }
         `
 
-        const {UID, EventTime, Code, Key} = registerEventRequest
+        const {UID, EventTime, Code} = registerEventRequest
 
         if(Code !== 2) {
             throw new Error("Unknown event code")

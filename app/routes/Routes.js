@@ -18,7 +18,7 @@ module.exports = function (injects) {
     router.get("/status", (ctx) => {
         ctx.status = 200
         ctx.body = {health: "OK"}
-    });
+    })
 
-    return router;
+    return router
 }
