@@ -242,10 +242,15 @@ class AggregationController {
     }
 
     async returnInternalServerError(ctx, e) {
-        logger.error("body: ", JSON.stringify(ctx.request.body))
-        logger.error("params: ", JSON.stringify(ctx.params))
-        logger.error(e)
-        logger.error(e.stack)
+
+        const msg = `
+        body: ${JSON.stringify(ctx.request.body)}
+        params: ${JSON.stringify(ctx.params)}
+        error: ${e.message || e}
+        stack: ${e.stack}`
+
+        logger.error(msg)
+
         ctx.body = ""
         ctx.status = 500
     }
