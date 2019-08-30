@@ -236,11 +236,17 @@ class ControllerService {
             throw new Error("Unknown event code")
         }
 
+        const timestamp = Number(EventTime + "000")
+
+        if(new Date(timestamp) > new Date()) {
+            throw new Error("Encashment timestamp cannot be in future")
+        }
+
         const variables = {
             input: {
                 controllerUid: UID,
                 eventType: "ENCASHMENT",
-                timestamp: Number(EventTime + "000")
+                timestamp
             }
         }
 
