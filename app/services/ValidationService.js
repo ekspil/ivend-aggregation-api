@@ -74,8 +74,8 @@ class ValidationService {
         const schema = Joi.object().keys({
             UID: Joi.string().required(),
             Key: Joi.string().required(),
-            EventTime: Joi.number().required(),
-            Code: Joi.number().integer().min(1).max(2).required(),
+            EventTime: Joi.string().required().regex(/^[0-9]{10,10}$/),
+            Code: Joi.number().integer().min(1).max(2).required()
         })
 
         return Joi.validate(registerEventRequest, schema)
