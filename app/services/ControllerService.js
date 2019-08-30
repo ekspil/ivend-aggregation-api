@@ -240,7 +240,7 @@ class ControllerService {
             input: {
                 controllerUid: UID,
                 eventType: "ENCASHMENT",
-                timestamp: Number(EventTime + '000')
+                timestamp: Number(EventTime + "000")
             }
         }
 
