@@ -29,7 +29,7 @@ class ValidationService {
         try {
             const date = new Date(registerErrorRequest.ErrorTime)
 
-            if (!date instanceof Date || date.getFullYear() < 2000) {
+            if (!(date instanceof Date) || date.getFullYear() < 2000) {
                 throw new Error()
             }
 
@@ -68,6 +68,17 @@ class ValidationService {
         })
 
         return Joi.validate(registerSaleRequest, schema)
+    }
+
+    static validateRegisterEventRequest(registerEventRequest) {
+        const schema = Joi.object().keys({
+            UID: Joi.string().required(),
+            Key: Joi.string().required(),
+            EventTime: Joi.string().required().regex(/^[0-9]{10,10}$/),
+            Code: Joi.number().integer().min(1).max(2).required()
+        })
+
+        return Joi.validate(registerEventRequest, schema)
     }
 
 }

@@ -1,4 +1,4 @@
-const {request, GraphQLClient} = require('graphql-request')
+const {GraphQLClient} = require("graphql-request")
 // ... or create a GraphQL client instance to send requests
 const client = new GraphQLClient(process.env.GRAPHQL_API_URL, {
     headers: {
@@ -152,7 +152,7 @@ class ControllerService {
 
         const {UID, Pt, Price, ButtonId} = registerSaleRequest
 
-        let type;
+        let type
 
         switch (Pt) {
             case 0:
@@ -212,6 +212,47 @@ class ControllerService {
         const data = await client.request(query, variables)
 
         if (!data.registerControllerError) {
+            throw new Error("Failed to register error, registerError returned null")
+        }
+    }
+
+    /**
+     * Registers the controller event
+     * @param registerEventRequest {RegisterEventRequest}
+     * @returns {Promise<?>}
+     */
+    async registerEvent(registerEventRequest) {
+        const query = `
+        mutation($input: RegisterEventInput!) {
+          registerEvent(input: $input) {
+            id
+          }
+        }
+        `
+
+        const {UID, EventTime, Code} = registerEventRequest
+
+        if(Code !== 2) {
+            throw new Error("Unknown event code")
+        }
+
+        const timestamp = Number(EventTime + "000")
+
+        if(new Date(timestamp) > new Date()) {
+            throw new Error("Encashment timestamp cannot be in future")
+        }
+
+        const variables = {
+            input: {
+                controllerUid: UID,
+                eventType: "ENCASHMENT",
+                timestamp
+            }
+        }
+
+        const data = await client.request(query, variables)
+
+        if (!data.registerEvent) {
             throw new Error("Failed to register error, registerError returned null")
         }
     }

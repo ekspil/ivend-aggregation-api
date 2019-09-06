@@ -1,10 +1,11 @@
 {
   "name": "ivend-aggregation-api",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
@@ -22,9 +23,10 @@
     "koa-bodyparser": "^4.2.1",
     "koa-mount": "^4.0.0",
     "koa-router": "^7.4.0",
-    "mongoose": "^5.3.14"
+    "my-custom-logger": "^1.0.2"
   },
   "devDependencies": {
+    "eslint": "^6.1.0",
     "jest": "^23.6.0",
     "supertest": "^3.3.0"
   }

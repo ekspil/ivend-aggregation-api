@@ -5,7 +5,6 @@ const mount = require("koa-mount")
 const bodyParser = require("koa-bodyparser")
 const Routes = require("./routes/Routes")
 const AggregationController = require("./controllers/AggregationController")
-const mongoose = require("mongoose")
 
 const app = new Koa()
 
@@ -35,7 +34,7 @@ ApiModule.start = async () => {
 
         const contentType = ctx.req.headers["content-type"]
 
-        if (ctx.request.method !== 'GET' && contentType !== "application/json") {
+        if (ctx.request.method !== "GET" && contentType !== "application/json") {
             ctx.status = 400
             ctx.body = {code: 1, message: "Invalid Content-Type header. Only application/json is accepted"}
         } else {

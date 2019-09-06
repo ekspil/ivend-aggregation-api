@@ -4,8 +4,12 @@ const RegisterControllerRequest = require("../models/RegisterControllerRequest")
 const RegisterErrorRequest = require("../models/RegisterErrorRequest")
 const RegisterStateRequest = require("../models/RegisterStateRequest")
 const RegisterSaleRequest = require("../models/RegisterSaleRequest")
+const RegisterEventRequest = require("../models/RegisterEventRequest")
 const RegisterControllerResponse = require("../models/RegisterControllerResponse")
 
+const logger = require("my-custom-logger")
+
+/* eslint require-atomic-updates: 0 */
 
 class AggregationController {
 
@@ -13,12 +17,13 @@ class AggregationController {
      * AggregationController
      */
     constructor() {
-        this.controllerService = new ControllerService();
+        this.controllerService = new ControllerService()
 
         this.registerController = this.registerController.bind(this)
         this.registerState = this.registerState.bind(this)
         this.registerError = this.registerError.bind(this)
         this.registerSale = this.registerSale.bind(this)
+        this.registerEvent = this.registerEvent.bind(this)
     }
 
     async registerController(ctx) {
@@ -36,12 +41,12 @@ class AggregationController {
             const time = new Date(registrationTime)
 
             const date = {
-                year: (time.getFullYear() + '').padStart(2, 0),
-                month: ((time.getMonth() + 1) + '').padStart(2, 0),
-                date: (time.getDate() + '').padStart(2, 0),
-                hours: (time.getHours() + '').padStart(2, 0),
-                minutes: (time.getMinutes() + '').padStart(2, 0),
-                seconds: (time.getSeconds() + '').padStart(2, 0),
+                year: (time.getFullYear() + "").padStart(2, 0),
+                month: ((time.getMonth() + 1) + "").padStart(2, 0),
+                date: (time.getDate() + "").padStart(2, 0),
+                hours: (time.getHours() + "").padStart(2, 0),
+                minutes: (time.getMinutes() + "").padStart(2, 0),
+                seconds: (time.getSeconds() + "").padStart(2, 0),
             }
 
             const SDT = `${date.year}-${date.month}-${date.date} ${date.hours}:${date.minutes}:${date.seconds}`
@@ -174,35 +179,78 @@ class AggregationController {
 
     }
 
+    async registerEvent(ctx) {
+        try {
+            const validationResult = ValidationService.validateRegisterEventRequest(ctx.request.body)
+
+            if (validationResult.error) {
+                return await this.returnValidationError(ctx)
+            }
+
+            const registerEventRequest = new RegisterEventRequest(ctx.request.body)
+
+            const controller = await this.controllerService.getControllerByUID(registerEventRequest.UID)
+
+            if (!controller || (controller && controller.accessKey !== registerEventRequest.Key)) {
+                return this.returnUnauthenticated(ctx)
+            }
+
+            if (!controller.machine) {
+                return this.returnMachineNotFound(ctx)
+            }
+
+            await this.controllerService.registerEvent(registerEventRequest)
+
+            ctx.body = null
+            ctx.status = 200
+        }
+        catch (e) {
+            if (e && e.response && Array.isArray(e.response.errors) && e.response.errors[0] && e.response.errors[0].message) {
+                const {message} = e.response.errors[0]
+                if (message === "Machine not found") {
+                    return this.returnMachineNotFound(ctx)
+                }
+            }
+
+            return this.returnInternalServerError(ctx, e)
+        }
+
+    }
+
     async returnMachineNotFound(ctx) {
-        console.log(`412 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        logger.error(`412 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 412
         ctx.body = ""
     }
 
     async returnValidationError(ctx) {
-        console.log(`400 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        logger.error(`400 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 400
         ctx.body = ""
     }
 
     async returnUnauthenticated(ctx) {
-        console.log(`401 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        logger.error(`401 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 401
         ctx.body = ""
     }
 
     async returnNotFound(ctx) {
-        console.log(`404 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        logger.error(`404 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 404
         ctx.body = ""
     }
 
     async returnInternalServerError(ctx, e) {
-        console.log('body: ', JSON.stringify(ctx.request.body))
-        console.log('params: ', JSON.stringify(ctx.params))
-        console.error(e)
-        console.error(e.stack)
+
+        const msg = `
+        body: ${JSON.stringify(ctx.request.body)}
+        params: ${JSON.stringify(ctx.params)}
+        error: ${e.message || e}
+        stack: ${e.stack}`
+
+        logger.error(msg)
+
         ctx.body = ""
         ctx.status = 500
     }
