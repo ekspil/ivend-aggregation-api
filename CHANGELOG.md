@@ -2,7 +2,11 @@
 
 * First version
 
-# 1.0.1 - Release
+# 1.0.1 - Hotfix
+
+* Listen Koa2 on all interfaces
+
+# 1.0.2 - Release
 
 * Register event method
 * Refactor
