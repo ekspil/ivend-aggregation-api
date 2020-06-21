@@ -1,5 +1,5 @@
 const ControllerService = require("../services/ControllerService")
-const ValidationService = require("../services/ValidationService")
+// const ValidationService = require("../services/ValidationService")
 const RegisterControllerRequest = require("../models/RegisterControllerRequest")
 const RegisterErrorRequest = require("../models/RegisterErrorRequest")
 const RegisterStateRequest = require("../models/RegisterStateRequest")
@@ -28,13 +28,13 @@ class AggregationController {
 
     async registerController(ctx) {
         try {
-            const validationResult = ValidationService.validateRegisterControllerRequest(ctx.request.body)
+            // const validationResult = ValidationService.validateRegisterControllerRequest(ctx.request.body)
 
             const registerControllerRequest = new RegisterControllerRequest(ctx.request.body)
 
-            if (validationResult.error) {
-                return await this.returnValidationError(ctx)
-            }
+            // if (validationResult.error) {
+            //     return await this.returnValidationError(ctx)
+            // }
 
             const {accessKey, mode, registrationTime} = await this.controllerService.authController(registerControllerRequest)
 
@@ -69,11 +69,11 @@ class AggregationController {
 
     async registerError(ctx) {
         try {
-            const validationResult = ValidationService.validateRegisterErrorRequest(ctx.request.body)
-
-            if (validationResult.error) {
-                return await this.returnValidationError(ctx)
-            }
+            // const validationResult = ValidationService.validateRegisterErrorRequest(ctx.request.body)
+            //
+            // if (validationResult.error) {
+            //     return await this.returnValidationError(ctx)
+            // }
 
             const registerErrorRequest = new RegisterErrorRequest(ctx.request.body)
 
@@ -96,11 +96,11 @@ class AggregationController {
 
     async registerState(ctx) {
         try {
-            const validationResult = ValidationService.validateRegisterStateRequest(ctx.request.body)
-
-            if (validationResult.error) {
-                return await this.returnValidationError(ctx)
-            }
+            // const validationResult = ValidationService.validateRegisterStateRequest(ctx.request.body)
+            //
+            // if (validationResult.error) {
+            //     return await this.returnValidationError(ctx)
+            // }
 
             const registerStateRequest = new RegisterStateRequest(ctx.request.body)
 
@@ -137,11 +137,11 @@ class AggregationController {
 
     async registerSale(ctx) {
         try {
-            const validationResult = ValidationService.validateRegisterSaleRequest(ctx.request.body)
-
-            if (validationResult.error) {
-                return await this.returnValidationError(ctx)
-            }
+            // const validationResult = ValidationService.validateRegisterSaleRequest(ctx.request.body)
+            //
+            // if (validationResult.error) {
+            //     return await this.returnValidationError(ctx)
+            // }
 
             const registerSaleRequest = new RegisterSaleRequest(ctx.request.body)
 
@@ -181,11 +181,11 @@ class AggregationController {
 
     async registerEvent(ctx) {
         try {
-            const validationResult = ValidationService.validateRegisterEventRequest(ctx.request.body)
-
-            if (validationResult.error) {
-                return await this.returnValidationError(ctx)
-            }
+            // const validationResult = ValidationService.validateRegisterEventRequest(ctx.request.body)
+            //
+            // if (validationResult.error) {
+            //     return await this.returnValidationError(ctx)
+            // }
 
             const registerEventRequest = new RegisterEventRequest(ctx.request.body)
 
