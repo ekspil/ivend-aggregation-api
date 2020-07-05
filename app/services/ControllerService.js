@@ -55,7 +55,7 @@ class ControllerService {
      * @returns {Promise<ControllerModel>}
      */
     async authController(registerControllerRequest) {
-        const {UID, FW} = registerControllerRequest
+        const {UID, FW, IMSI} = registerControllerRequest
 
         const query = `
         mutation($input: AuthControllerInput!) {
@@ -71,6 +71,7 @@ class ControllerService {
             input: {
                 controllerUid: UID,
                 firmwareId: FW,
+                imsi: IMSI
             }
         }
 
