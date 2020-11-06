@@ -11,3 +11,7 @@
 * Register event method
 * Refactor
 * Centralized logging
+
+# 1.0.3 - Release
+
+* Register IMSI, disable check
