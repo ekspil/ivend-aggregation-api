@@ -99,7 +99,7 @@ class ControllerService {
         }
         `
 
-        const {ch, bh, cv, bv, bus, ms} = registerStateRequest.State
+        const {ch, bh, cv, bv, bus, ms, ar} = registerStateRequest.State
         const [dex1Status, dex2Status, exeStatus, mdbStatus] = bus.split("")
 
         const BusStatusMap = {
@@ -121,6 +121,7 @@ class ControllerService {
                 billAcceptorStatus: BusStatusMap[bh],
                 coinAmount: cv,
                 billAmount: bv,
+                attentionRequired: ar || 0,
                 dex1Status: BusStatusMap[dex1Status],
                 dex2Status: BusStatusMap[dex2Status],
                 exeStatus: BusStatusMap[exeStatus],
