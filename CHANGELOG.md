@@ -27,3 +27,7 @@
 # 1.0.6 - Release
 
 * ar in state
+
+# 1.0.7 - Release
+
+* ar in state
