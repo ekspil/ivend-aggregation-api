@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: aggregation-api
-        image: registry.gitlab.com/pshenmic/ivend/aggregation-api:1.0.7
+        image: registry.gitlab.com/pshenmic/ivend/aggregation-api:1.0.8
         ports:
           - containerPort: 3000
         readinessProbe:
