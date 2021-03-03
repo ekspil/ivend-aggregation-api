@@ -37,6 +37,7 @@ class AggregationController {
             // }
 
             const {accessKey, mode, registrationTime} = await this.controllerService.authController(registerControllerRequest)
+            logger.info(`registerController qraphQL answer: accessKey(${accessKey}), mode(${mode}), registrationTime(${registrationTime})`)
 
             const time = new Date(registrationTime)
 
@@ -110,7 +111,8 @@ class AggregationController {
                 return this.returnUnauthenticated(ctx)
             }
 
-            await this.controllerService.registerState(registerStateRequest)
+            const answer = await this.controllerService.registerState(registerStateRequest)
+            logger.info(`registerState qraphQL answer: ${answer})`)
 
             ctx.body = ""
             ctx.status = 200
@@ -156,6 +158,8 @@ class AggregationController {
             }
 
             const sale = await this.controllerService.registerSale(registerSaleRequest)
+
+            logger.info(`registerSale qraphQL answer: ${sale})`)
             const {sqr} = sale
 
             ctx.body = {
