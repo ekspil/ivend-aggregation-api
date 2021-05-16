@@ -36,7 +36,7 @@ class AggregationController {
             //     return await this.returnValidationError(ctx)
             // }
 
-            const {accessKey, mode, registrationTime} = await this.controllerService.authController(registerControllerRequest)
+            const {accessKey, mode, registrationTime, bankTerminalMode} = await this.controllerService.authController(registerControllerRequest)
             logger.info(`registerController qraphQL answer: accessKey(${accessKey}), mode(${mode}), registrationTime(${registrationTime})`)
 
             const time = new Date(registrationTime)
@@ -52,7 +52,7 @@ class AggregationController {
 
             const SDT = `${date.year}-${date.month}-${date.date} ${date.hours}:${date.minutes}:${date.seconds}`
 
-            ctx.body = new RegisterControllerResponse({Key: accessKey, Mode: mode, SDT})
+            ctx.body = new RegisterControllerResponse({Key: accessKey, Mode: mode, SDT, Terminal: bankTerminalMode})
             ctx.status = 200
         }
         catch (e) {

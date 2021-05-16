@@ -9,9 +9,10 @@ class RegisterControllerResponse {
      * @throws {Error} throws on wrong rawObj
      */
     constructor(rawObj) {
-        const {Key, Mode, SDT} = rawObj
+        const {Key, Mode, SDT, Terminal} = rawObj
         this.Key = Key || null
         this.Mode = Mode || null
+        this.Terminal = Terminal || null
         this.SDT = SDT || null
 
         if (!this.Key || !this.Mode) {
