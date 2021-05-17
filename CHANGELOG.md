@@ -45,3 +45,7 @@
 # 1.0.10 - Release
 
 * ar in state
+
+# 1.0.11 - Release
+
+* terminal model returns
