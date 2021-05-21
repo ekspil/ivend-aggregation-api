@@ -54,7 +54,7 @@ jobs:
           command: |
             echo ${YC_SERVICE_ACCOUNT} | docker login -u json_key --password-stdin cr.yandex
             docker build -t "cr.yandex/$YC_REGISTRY_ID/aggregation-api:$CIRCLE_SHA1" .
-            docker push "cr.yandex/$YC_REGISTRY_ID/graphql:$CIRCLE_SHA1"
+            docker push "cr.yandex/$YC_REGISTRY_ID/aggregation-api:$CIRCLE_SHA1"
 
   deploy_develop:
     docker:
