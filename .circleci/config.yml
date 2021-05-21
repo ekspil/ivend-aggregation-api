@@ -75,7 +75,7 @@ jobs:
             yc config set service-account-key /tmp/key.json
             yc managed-kubernetes cluster get-credentials --id $YC_K8S_CLUSTER_ID --external
             sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-            kubectl set image deployment/aggregation-api aggregation-api=cr.yandex/$YC_REGISTRY_ID/aggregation-api  :$CIRCLE_SHA1 --namespace development
+            kubectl set image deployment/aggregation-api aggregation-api=cr.yandex/$YC_REGISTRY_ID/aggregation-api:$CIRCLE_SHA1 --namespace development
   deploy_production:
     docker:
       - image: circleci/node:11.1.0
