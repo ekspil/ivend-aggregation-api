@@ -24,9 +24,10 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
 
+
   docker_push_tagged:
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: docker:19.03.13-git
 
     working_directory: ~/repo
 
@@ -36,13 +37,12 @@ jobs:
       - deploy:
           name: Push application Docker image
           command: |
-            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api:$CIRCLE_TAG" .
-            docker login registry.gitlab.com -u "pshenmic" -p "$GITLAB_TOKEN"
-            docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api:$CIRCLE_TAG"
-
+            echo ${YC_SERVICE_ACCOUNT} | docker login -u json_key --password-stdin cr.yandex
+            docker build -t "cr.yandex/$YC_REGISTRY_ID/aggregation-api:$CIRCLE_TAG" .
+            docker push "cr.yandex/$YC_REGISTRY_ID/aggregation-api:$CIRCLE_TAG"
   docker_push_develop:
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: docker:19.03.13-git
 
     working_directory: ~/repo
 
@@ -52,11 +52,9 @@ jobs:
       - deploy:
           name: Push application Docker image
           command: |
-            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api:$CIRCLE_SHA1" .
-            docker build -t "registry.gitlab.com/pshenmic/ivend/aggregation-api-redoc" ./doc/openapi
-            docker login registry.gitlab.com -u "pshenmic" -p "$GITLAB_TOKEN"
-            docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api:$CIRCLE_SHA1"
-            docker push "registry.gitlab.com/pshenmic/ivend/aggregation-api-redoc"
+            echo ${YC_SERVICE_ACCOUNT} | docker login -u json_key --password-stdin cr.yandex
+            docker build -t "cr.yandex/$YC_REGISTRY_ID/aggregation-api:$CIRCLE_SHA1" .
+            docker push "cr.yandex/$YC_REGISTRY_ID/graphql:$CIRCLE_SHA1"
 
   deploy_develop:
     docker:
@@ -65,23 +63,19 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "3a:2c:53:af:57:c9:dd:eb:85:56:c6:b8:eb:fb:f5:4a"
-
       - run:
           name: Deploy
           command: |
-            ssh-keyscan -H $DEPLOY_SERVER >> ~/.ssh/known_hosts &&
-            echo "CIRCLE_SHA1=$CIRCLE_SHA1" > ./sshenv &&
-            scp ./sshenv deploy@$DEPLOY_SERVER:~/.ssh/environment &&
-            ssh deploy@$DEPLOY_SERVER 'cd /opt/aggregation-api && \
-            git checkout develop && \
-            git pull && \
-            envsubst < development-aggregation-api-kube-config.yml > /tmp/development-aggregation-api-kube-config.yml.patched && \
-            kubectl apply -f /tmp/development-aggregation-api-kube-config.yml.patched && \
-            kubectl replace --force -f redoc-kube-config.yml'
-
+            curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+            export PATH=$PATH:/home/circleci/yandex-cloud/bin/
+            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+            sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+            echo $YC_SERVICE_ACCOUNT > /tmp/key.json
+            yc config profile create sa-profile
+            yc config set service-account-key /tmp/key.json
+            yc managed-kubernetes cluster get-credentials --id $YC_K8S_CLUSTER_ID --external
+            sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+            kubectl set image deployment/aggregation-api aggregation-api=cr.yandex/$YC_REGISTRY_ID/aggregation-api  :$CIRCLE_SHA1 --namespace development
   deploy_production:
     docker:
       - image: circleci/node:11.1.0
