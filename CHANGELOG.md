@@ -49,3 +49,7 @@
 # 1.0.11 - Release
 
 * terminal model returns
+
+# 1.0.12 - Release
+
+* Move to yandex
