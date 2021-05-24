@@ -104,6 +104,7 @@ class AggregationController {
             // }
 
             const registerStateRequest = new RegisterStateRequest(ctx.request.body)
+            if (registerStateRequest.Key === "--------") return this.returnUnauthenticated({...ctx, MESSAGE: "NO KEY"})
 
             const controller = await this.controllerService.getControllerByUID(registerStateRequest.UID)
 
