@@ -63,6 +63,7 @@ class ControllerService {
             accessKey
             mode
             registrationTime
+            bankTerminalMode
           }
         }
         `
@@ -135,6 +136,8 @@ class ControllerService {
         if (!data.registerControllerState) {
             throw new Error("Failed to update controller state, registerControllerState returned null")
         }
+
+        return data.registerControllerState
     }
 
     /**

@@ -37,7 +37,7 @@ class AggregationController {
             // }
 
             const {accessKey, mode, registrationTime, bankTerminalMode} = await this.controllerService.authController(registerControllerRequest)
-            logger.info(`registerController qraphQL answer: accessKey(${accessKey}), mode(${mode}), registrationTime(${registrationTime})`)
+            logger.info(`registerController qraphQL answer: accessKey(${accessKey}), mode(${mode}), registrationTime(${registrationTime}, terminal(${bankTerminalMode}))`)
 
             const time = new Date(registrationTime)
 
@@ -113,7 +113,7 @@ class AggregationController {
             }
 
             const answer = await this.controllerService.registerState(registerStateRequest)
-            logger.info(`registerState qraphQL answer: ${answer})`)
+            logger.info(`registerState qraphQL answer: ${JSON.stringify(answer)})`)
 
             ctx.body = ""
             ctx.status = 200
@@ -160,7 +160,7 @@ class AggregationController {
 
             const sale = await this.controllerService.registerSale(registerSaleRequest)
 
-            logger.info(`registerSale qraphQL answer: ${sale})`)
+            logger.info(`registerSale qraphQL answer: ${JSON.stringify(sale)})`)
             const {sqr} = sale
 
             ctx.body = {
