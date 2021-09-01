@@ -69,3 +69,7 @@
 # 1.0.16 - Release
 
 * fix 
+
+# 1.0.17 - Release
+
+* fix 
