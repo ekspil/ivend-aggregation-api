@@ -155,7 +155,7 @@ class ControllerService {
         }
         `
 
-        const {UID, Pt, Price, ButtonId} = registerSaleRequest
+        const {UID, Pt, Price, ButtonId, CheckTime} = registerSaleRequest
 
         let type
 
@@ -175,7 +175,8 @@ class ControllerService {
                 controllerUid: UID,
                 type,
                 price: Price,
-                buttonId: ButtonId
+                buttonId: ButtonId,
+                timestamp: Number(CheckTime) * 1000
             }
         }
 
