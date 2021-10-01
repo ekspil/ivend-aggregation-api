@@ -160,7 +160,7 @@ class AggregationController {
 
             const sale = await this.controllerService.registerSale(registerSaleRequest)
 
-            logger.info(`registerSale qraphQL answer: ${JSON.stringify(sale)})`)
+            logger.info(`agreggation_api_register_sale_: fact_time = ${new Date().toISOString()}, body_from_controller = ${JSON.stringify(registerSaleRequest)})`)
             const {sqr} = sale
 
             ctx.body = {
