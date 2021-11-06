@@ -170,7 +170,7 @@ class AggregationController {
                 }
             }
             if(err){
-                ctx.err = err
+                ctx.body.err = err
             }
             ctx.status = 200
         }

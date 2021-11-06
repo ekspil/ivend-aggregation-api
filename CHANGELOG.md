@@ -89,3 +89,7 @@
 # 1.0.21 - Hotfix
 
 * fix 
+
+# 1.0.22 - Hotfix
+
+* fix 
