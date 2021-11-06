@@ -161,7 +161,7 @@ class AggregationController {
             const sale = await this.controllerService.registerSale(registerSaleRequest)
 
             logger.info(`agreggation_api_register_sale_: fact_time = ${new Date().toISOString()}, body_from_controller = ${JSON.stringify(registerSaleRequest)})`)
-            const {sqr, error} = sale
+            const {sqr, err} = sale
 
             ctx.body = {
                 Check: {
@@ -169,8 +169,8 @@ class AggregationController {
                     sqr
                 }
             }
-            if(error){
-                ctx.err = error
+            if(err){
+                ctx.err = err
             }
             ctx.status = 200
         }

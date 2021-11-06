@@ -150,7 +150,8 @@ class ControllerService {
         mutation($input: SaleEventInput!) {
           registerSale(input: $input) {
             id,
-            sqr
+            sqr,
+            err
           }
         }
         `
