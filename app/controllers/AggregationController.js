@@ -35,9 +35,8 @@ class AggregationController {
             // if (validationResult.error) {
             //     return await this.returnValidationError(ctx)
             // }
-
+            logger.info(`aggregation_api_register_controller ${JSON.stringify(ctx.request.body)})`)
             const {accessKey, mode, registrationTime, bankTerminalMode} = await this.controllerService.authController(registerControllerRequest)
-            logger.info(`registerController qraphQL answer: accessKey(${accessKey}), mode(${mode}), registrationTime(${registrationTime}, terminal(${bankTerminalMode}))`)
 
             const time = new Date(registrationTime)
 
@@ -75,7 +74,7 @@ class AggregationController {
             // if (validationResult.error) {
             //     return await this.returnValidationError(ctx)
             // }
-
+            logger.info(`aggregation_api_register_error ${JSON.stringify(ctx.request.body)})`)
             const registerErrorRequest = new RegisterErrorRequest(ctx.request.body)
 
             const controller = await this.controllerService.getControllerByUID(registerErrorRequest.UID)
@@ -147,7 +146,7 @@ class AggregationController {
             // if (validationResult.error) {
             //     return await this.returnValidationError(ctx)
             // }
-
+            logger.info(`aggregation_api_register_sale ${JSON.stringify(ctx.request.body)})`)
             const registerSaleRequest = new RegisterSaleRequest(ctx.request.body)
 
             const controller = await this.controllerService.getControllerByUID(registerSaleRequest.UID)
@@ -162,7 +161,6 @@ class AggregationController {
 
             const sale = await this.controllerService.registerSale(registerSaleRequest)
 
-            logger.info(`agreggation_api_register_sale_: fact_time = ${new Date().toISOString()}, body_from_controller = ${JSON.stringify(registerSaleRequest)})`)
             const {sqr, err} = sale
 
             ctx.body = {
@@ -196,7 +194,7 @@ class AggregationController {
             // if (validationResult.error) {
             //     return await this.returnValidationError(ctx)
             // }
-
+            logger.info(`aggregation_api_register_event ${JSON.stringify(ctx.request.body)})`)
             const registerEventRequest = new RegisterEventRequest(ctx.request.body)
 
             const controller = await this.controllerService.getControllerByUID(registerEventRequest.UID)
