@@ -102,8 +102,10 @@ class AggregationController {
             // if (validationResult.error) {
             //     return await this.returnValidationError(ctx)
             // }
-
+            logger.info(`aggregation_api_register_state ${JSON.stringify(ctx.request.body)})`)
             const registerStateRequest = new RegisterStateRequest(ctx.request.body)
+
+
             if (registerStateRequest.Key === "--------") return this.returnUnauthenticated({...ctx, MESSAGE: "NO KEY"})
 
             const controller = await this.controllerService.getControllerByUID(registerStateRequest.UID)
@@ -112,8 +114,8 @@ class AggregationController {
                 return this.returnUnauthenticated(ctx)
             }
 
-            const answer = await this.controllerService.registerState(registerStateRequest)
-            logger.info(`registerState qraphQL answer: ${JSON.stringify(answer)})`)
+            await this.controllerService.registerState(registerStateRequest)
+
 
             ctx.body = ""
             ctx.status = 200
