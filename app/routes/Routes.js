@@ -7,13 +7,15 @@ const router = new Router()
  * @returns {Router}
  */
 module.exports = function (injects) {
-    const {aggregationController} = injects
+    const {aggregationController, telemetronController} = injects
 
     router.post("/register/controller", aggregationController.registerController)
     router.post("/register/error", aggregationController.registerError)
     router.post("/register/state", aggregationController.registerState)
     router.post("/register/sale", aggregationController.registerSale)
     router.post("/register/event", aggregationController.registerEvent)
+
+    router.post("/register/telemetron", telemetronController.registerEvent)
 
     router.get("/status", (ctx) => {
         ctx.status = 200

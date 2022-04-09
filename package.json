@@ -15,6 +15,7 @@
   "dependencies": {
     "apollo-boost": "^0.1.22",
     "dotenv": "^6.1.0",
+    "easy-crc": "^1.0.0",
     "graphql": "^14.0.2",
     "graphql-request": "^1.8.2",
     "graphql-tag": "^2.10.0",

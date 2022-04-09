@@ -48,6 +48,28 @@ class ControllerService {
         return data.controller
     }
 
+    /**
+     * Creates {Controller}
+     * @param UID {string}
+     * @returns {Promise<ControllerModel>}
+     */
+    async getControllerUIDByIMEI(IMEI) {
+        const query = `
+        query {
+          uid: getControllerUIDByIMEI(imei: "${IMEI}")
+        }
+        `
+
+
+        const data = await client.request(query)
+
+        if (!data.uid) {
+            return null
+        }
+
+        return data.uid
+    }
+
 
     /**
      * Auths {Controller}

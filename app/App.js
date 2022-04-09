@@ -5,6 +5,7 @@ const mount = require("koa-mount")
 const bodyParser = require("koa-bodyparser")
 const Routes = require("./routes/Routes")
 const AggregationController = require("./controllers/AggregationController")
+const TelemetronController = require("./controllers/TelemetronController")
 
 const app = new Koa()
 
@@ -25,7 +26,8 @@ ApiModule.start = async () => {
     app.use(bodyParser())
 
     const aggregationController = new AggregationController()
-    const router = Routes({aggregationController})
+    const telemetronController = new TelemetronController()
+    const router = Routes({aggregationController, telemetronController})
 
     app.use(async (ctx, next) => {
         if (ctx.request.method === "GET") {
@@ -34,7 +36,7 @@ ApiModule.start = async () => {
 
         const contentType = ctx.req.headers["content-type"]
 
-        if (ctx.request.method !== "GET" && contentType !== "application/json") {
+        if (ctx.request.method !== "GET" && !(contentType === "application/json" || contentType === "application/x-www-form-urlencoded" )) {
             ctx.status = 400
             ctx.body = {code: 1, message: "Invalid Content-Type header. Only application/json is accepted"}
         } else {
