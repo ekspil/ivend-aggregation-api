@@ -38,7 +38,7 @@ ApiModule.start = async () => {
         const contentType = ctx.req.headers["content-type"]
         logger.info(`telemetron_test req.headers: ${JSON.stringify(ctx.req.headers)}, headers: ${JSON.stringify(ctx.headers)}`)
 
-        if (ctx.request.method !== "GET" && !(contentType === "application/json" || contentType === "application/x-www-form-urlencoded" )) {
+        if (ctx.request.method !== "GET" && !(contentType.includes("application/json") || contentType.includes("application/x-www-form-urlencoded") )) {
             ctx.status = 400
             ctx.body = {code: 1, message: "Invalid Content-Type header. Only application/json or application/x-www-form-urlencoded is accepted"}
         } else {
