@@ -169,6 +169,7 @@ class AggregationController {
                     sqr
                 }
             }
+
             if(err){
                 ctx.body.err = err
             }
