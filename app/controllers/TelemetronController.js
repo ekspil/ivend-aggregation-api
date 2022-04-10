@@ -18,7 +18,7 @@ class AggregationController {
 
 
     async registerEvent(ctx) {
-        logger.info(`telemetron_test body: ${JSON.stringify(ctx.request.body)}, headers: ${ctx.headers}`)
+        logger.info(`telemetron_test body: ${JSON.stringify(ctx.request.body)}, headers: ${JSON.stringify(ctx.headers)}`)
         try {
             if( !ctx.headers || !ctx.headers["x-key"] || ctx.headers["x-key"] !== process.env.TELEMETRON_KEY ){
                 return this.returnUnauthenticated(ctx)
