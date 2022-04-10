@@ -16,6 +16,7 @@ module.exports = function (injects) {
     router.post("/register/event", aggregationController.registerEvent)
 
     router.post("/register/telemetron", telemetronController.registerEvent)
+    router.post("/register/telemetron/external", telemetronController.registerEventExternal)
 
     router.get("/status", (ctx) => {
         ctx.status = 200

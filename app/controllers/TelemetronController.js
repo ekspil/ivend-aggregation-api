@@ -14,9 +14,12 @@ class AggregationController {
     constructor() {
         this.controllerService = new ControllerService()
         this.registerEvent = this.registerEvent.bind(this)
+        this.registerEventExternal = this.registerEventExternal.bind(this)
     }
 
-
+    async registerEventExternal(ctx) {
+        logger.info(`telemetron_test_external body: ${JSON.stringify(ctx.request.body)}, headers: ${JSON.stringify(ctx.headers)}`)
+    }
     async registerEvent(ctx) {
         logger.info(`telemetron_test body: ${JSON.stringify(ctx.request.body)}, headers: ${JSON.stringify(ctx.headers)}`)
         try {
