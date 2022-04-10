@@ -38,7 +38,7 @@ ApiModule.start = async () => {
 
         if (ctx.request.method !== "GET" && !(contentType === "application/json" || contentType === "application/x-www-form-urlencoded" )) {
             ctx.status = 400
-            ctx.body = {code: 1, message: "Invalid Content-Type header. Only application/json is accepted"}
+            ctx.body = {code: 1, message: "Invalid Content-Type header. Only application/json or application/x-www-form-urlencoded is accepted"}
         } else {
             await next()
         }
