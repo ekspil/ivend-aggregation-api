@@ -6,7 +6,6 @@ const bodyParser = require("koa-bodyparser")
 const Routes = require("./routes/Routes")
 const AggregationController = require("./controllers/AggregationController")
 const TelemetronController = require("./controllers/TelemetronController")
-const logger = require("my-custom-logger")
 
 const app = new Koa()
 
@@ -36,7 +35,6 @@ ApiModule.start = async () => {
         }
 
         const contentType = ctx.req.headers["content-type"]
-        logger.info(`telemetron_test req.headers: ${JSON.stringify(ctx.req.headers)}, headers: ${JSON.stringify(ctx.headers)}`)
 
         if (ctx.request.method !== "GET" && !(contentType.includes("application/json") || contentType.includes("application/x-www-form-urlencoded") )) {
             ctx.status = 400

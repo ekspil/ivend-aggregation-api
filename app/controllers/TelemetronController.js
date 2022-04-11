@@ -15,6 +15,7 @@ class AggregationController {
         this.controllerService = new ControllerService()
         this.registerEvent = this.registerEvent.bind(this)
         this.registerEventExternal = this.registerEventExternal.bind(this)
+        this.pingResponse = this.pingResponse.bind(this)
     }
 
     async registerEventExternal(ctx) {
@@ -29,10 +30,16 @@ class AggregationController {
             logger.info(`telemetron_test auth ok`)
             const telemetronEventRequest = new TelemetronEventRequest(ctx.request.body)
 
+            logger.info(`telemetron_test telemetronEventRequest: ${JSON.stringify(telemetronEventRequest)}`)
+
             const uid = await this.controllerService.getControllerUIDByIMEI(telemetronEventRequest.imei)
             if(!uid) {
                 logger.info(`telemetron_test imei not found ${telemetronEventRequest.imei}`)
                 return this.returnUnauthenticated(ctx)
+            }
+
+            if(telemetronEventRequest.reason === "ping"){
+                return await this.pingResponse(ctx)
             }
 
             logger.info(`aggregation_api_register_event ${JSON.stringify(ctx.request.body)})`)
@@ -69,6 +76,21 @@ class AggregationController {
             return this.returnInternalServerError(ctx, e)
         }
 
+    }
+
+    async pingResponse(ctx, timeZone = 3){
+        const date = new Date()
+        date.setUTCHours(date.getUTCHours() + timeZone)
+
+        const stringDate = `${date.getUTCFullYear()}-${("0" + (date.getUTCMonth()+1)).slice(-2)}-${("0" + date.getUTCDate()).slice(-2)} ${("0" + date.getUTCHours()).slice(-2)}:${("0" + date.getUTCMinutes()).slice(-2)}:${("0" + date.getUTCSeconds()).slice(-2)}`
+
+        ctx.body = encodeURIComponent(`time=${stringDate}&status=ok`)
+        ctx.status = 200
+        let value = crc16("ARC", ctx.body).toString(16).toUpperCase()
+        ctx.set({
+            "content-type": "application/x-www-form-urlencoded",
+            "X-Checksum": value
+        })
     }
 
     async returnMachineNotFound(ctx) {
