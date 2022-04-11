@@ -22,23 +22,24 @@ class AggregationController {
         logger.info(`telemetron_test_external body: ${JSON.stringify(ctx.request.body)}, headers: ${JSON.stringify(ctx.headers)}`)
     }
     async registerEvent(ctx) {
-        logger.info(`telemetron_test body: ${JSON.stringify(ctx.request.body)}, headers: ${JSON.stringify(ctx.headers)}`)
+
         try {
             if( !ctx.headers || !ctx.headers["x-key"] || ctx.headers["x-key"] !== process.env.TELEMETRON_KEY ){
                 return this.returnUnauthenticated(ctx)
             }
-            logger.info(`telemetron_test auth ok`)
+
             const telemetronEventRequest = new TelemetronEventRequest(ctx.request.body)
 
-            logger.info(`telemetron_test telemetronEventRequest: ${JSON.stringify(telemetronEventRequest)}`)
+
 
             const uid = await this.controllerService.getControllerUIDByIMEI(telemetronEventRequest.imei)
             if(!uid) {
-                logger.info(`telemetron_test imei not found ${telemetronEventRequest.imei}`)
+
                 return this.returnUnauthenticated(ctx)
             }
 
             if(telemetronEventRequest.reason === "ping"){
+                logger.info(`telemetron_test ping request ${telemetronEventRequest.imei}`)
                 return await this.pingResponse(ctx)
             }
 
