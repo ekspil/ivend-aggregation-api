@@ -58,11 +58,11 @@ class AggregationController {
 
             //await this.controllerService.telemetronEvent(telemetronEventRequest)
 
-            ctx.body = encodeURIComponent(`time=${new Date().toLocaleString("ru-RU")}&status=ok`)
+            ctx.body = `time=${new Date().toLocaleString("ru-RU")}&status=ok`
             ctx.status = 200
             let value = crc16("ARC", ctx.body).toString(16).toUpperCase()
             ctx.set({
-                "content-type": "application/x-www-form-urlencoded",
+                "content-type": "text/html; charset=UTF-8",
                 "X-Checksum": value
             })
         }
@@ -85,11 +85,11 @@ class AggregationController {
 
         const stringDate = `${date.getUTCFullYear()}-${("0" + (date.getUTCMonth()+1)).slice(-2)}-${("0" + date.getUTCDate()).slice(-2)} ${("0" + date.getUTCHours()).slice(-2)}:${("0" + date.getUTCMinutes()).slice(-2)}:${("0" + date.getUTCSeconds()).slice(-2)}`
 
-        ctx.body = encodeURIComponent(`time=${stringDate}&status=ok`)
+        ctx.body = `time=${stringDate}&status=ok`
         ctx.status = 200
         let value = crc16("ARC", ctx.body).toString(16).toUpperCase()
         ctx.set({
-            "content-type": "application/x-www-form-urlencoded",
+            "content-type": "text/html; charset=UTF-8",
             "X-Checksum": value
         })
     }

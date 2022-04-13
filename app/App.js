@@ -7,7 +7,6 @@ const Routes = require("./routes/Routes")
 const AggregationController = require("./controllers/AggregationController")
 const TelemetronController = require("./controllers/TelemetronController")
 
-const logger = require("my-custom-logger")
 
 const app = new Koa()
 
@@ -35,7 +34,6 @@ ApiModule.start = async () => {
         if (ctx.request.method === "GET") {
             return await next()
         }
-        logger.info(`telemetron_test_middle body: ${JSON.stringify(ctx.request.body)}, headers: ${JSON.stringify(ctx.headers)}`)
 
         const contentType = ctx.req.headers["content-type"]
 
