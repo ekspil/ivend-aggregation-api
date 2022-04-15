@@ -42,7 +42,7 @@ class AggregationController {
 
 
 
-            const controller = await this.controllerService.getControllerByUID(telemetronEventRequest.imei)
+            const controller = await this.controllerService.getControllerByUID(uid)
 
             if (!controller) {
                 return this.returnUnauthenticated(ctx)
