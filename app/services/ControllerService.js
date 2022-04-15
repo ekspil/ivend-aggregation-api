@@ -50,8 +50,8 @@ class ControllerService {
 
     /**
      * Creates {Controller}
-     * @param UID {string}
-     * @returns {Promise<ControllerModel>}
+     * @param IMEI {string}
+     * @returns {Promise<string>}
      */
     async getControllerUIDByIMEI(IMEI) {
         const query = `
