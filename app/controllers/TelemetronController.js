@@ -1,6 +1,8 @@
 const { crc16 } = require("easy-crc")
 const ControllerService = require("../services/ControllerService")
 const TelemetronEventRequest = require("../models/TelemetronEventRequest")
+const RegisterSaleRequest = require("../models/TelemetronRegisterSaleRequest")
+const RegisterStateRequest = require("../models/TelemetronRegisterStateRequest")
 
 const logger = require("my-custom-logger")
 
@@ -38,12 +40,6 @@ class AggregationController {
                 return this.returnUnauthenticated(ctx)
             }
 
-            if(telemetronEventRequest.reason === "ping"){
-                logger.info(`telemetron_test ping request ${telemetronEventRequest.imei}`)
-                return await this.pingResponse(ctx)
-            }
-
-            logger.info(`aggregation_api_register_event ${JSON.stringify(ctx.request.body)})`)
 
 
             const controller = await this.controllerService.getControllerByUID(telemetronEventRequest.imei)
@@ -56,15 +52,23 @@ class AggregationController {
                 return this.returnMachineNotFound(ctx)
             }
 
-            //await this.controllerService.telemetronEvent(telemetronEventRequest)
 
-            ctx.body = `time=${new Date().toLocaleString("ru-RU")}&status=ok`
-            ctx.status = 200
-            let value = crc16("ARC", ctx.body).toString(16).toUpperCase()
-            ctx.set({
-                "content-type": "text/html; charset=UTF-8",
-                "X-Checksum": value
-            })
+            if(telemetronEventRequest.reason === "ping" && !telemetronEventRequest.mdb_product){
+                const registerStateRequest = new RegisterStateRequest(telemetronEventRequest)
+                await this.controllerService.registerState(registerStateRequest)
+                return await this.pingResponse(ctx)
+            }
+
+            if(telemetronEventRequest.mdb_product){
+
+                for(let sale of telemetronEventRequest.mdb_product){
+                    const registerSaleRequest = new RegisterSaleRequest(sale, uid)
+                    await this.controllerService.registerSale(registerSaleRequest)
+                }
+                return await this.pingResponse(ctx)
+            }
+
+
         }
         catch (e) {
             if (e && e.response && Array.isArray(e.response.errors) && e.response.errors[0] && e.response.errors[0].message) {
