@@ -11,7 +11,7 @@ class TelemetronEventRequest {
         this.qlt = qlt || null
         this.bat = bat || null
         this.exe = exe || null
-        this.mdb_product = (mdb_product && mdb_product[0]) ? mdb_product[0] : null
+        this.mdb_product = mdb_product || null
     }
 }
 
