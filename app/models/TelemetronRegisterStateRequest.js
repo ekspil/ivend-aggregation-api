@@ -74,11 +74,11 @@ class RegisterStateRequest {
         this.State = {
             ch: "0",
             bh: "1",
-            cv: "0",
-            bv: "0",
+            cv: 0,
+            bv: 0,
             bus: BusStatusMap(mdb, exe),
             ms: SignalStrengthMap(qlt),
-            ar: "0"
+            ar: 0
         }
 
         if (!UID) {
