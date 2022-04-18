@@ -1,6 +1,5 @@
 
 
-const logger = require("my-custom-logger")
 class RegisterSaleRequest {
 
     /**
@@ -13,9 +12,6 @@ class RegisterSaleRequest {
      */
     constructor(rawObj, UID) {
         const arr = rawObj.split(",")
-        logger.info(`telemetron_mdb_product arr ${JSON.stringify(arr)}`)
-        logger.info(`telemetron_mdb_product price ${Number(arr[1])}`)
-        logger.info(`telemetron_mdb_product date ${(new Date(arr[2]).getTime() / 1000).toFixed(0)}`)
         //const {UID, Pt, Price, ButtonId, CheckTime} = registerSaleRequest
         let Pt
         switch (arr[4]) {

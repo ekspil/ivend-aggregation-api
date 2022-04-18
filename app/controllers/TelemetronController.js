@@ -54,7 +54,7 @@ class AggregationController {
 
 
             if(telemetronEventRequest.reason === "ping" && !telemetronEventRequest.mdb_product){
-                const registerStateRequest = new RegisterStateRequest(telemetronEventRequest)
+                const registerStateRequest = new RegisterStateRequest(telemetronEventRequest, uid)
                 await this.controllerService.registerState(registerStateRequest)
                 return await this.pingResponse(ctx)
             }
