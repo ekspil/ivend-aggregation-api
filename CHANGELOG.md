@@ -101,3 +101,7 @@
 # 1.0.24 - Hotfix
 
 * fix logs
+
+# 1.0.25 - Hotfix
+
+* fix logs
