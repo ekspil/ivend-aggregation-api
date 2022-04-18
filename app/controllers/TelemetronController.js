@@ -62,6 +62,7 @@ class AggregationController {
             if(telemetronEventRequest.mdb_product){
 
                 for(let sale of telemetronEventRequest.mdb_product){
+                    logger.info(`telemetron_mdb_product ${JSON.stringify(sale)}`)
                     const registerSaleRequest = new RegisterSaleRequest(sale, uid)
                     await this.controllerService.registerSale(registerSaleRequest)
                 }
