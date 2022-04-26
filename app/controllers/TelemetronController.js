@@ -69,7 +69,7 @@ class AggregationController {
 
 
             if(actionStatuses.includes(telemetronEventRequest.reason) && !telemetronEventRequest.mdb_product){
-                //await this.controllerService.authController({UID: uid, FW: "vendista v1", IMSI: })
+                await this.controllerService.authController({UID: uid, FW: "vendista v1", IMSI: ""})
                 return await this.pingResponse(ctx, 3 , "config")
             }
 
