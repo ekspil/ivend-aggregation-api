@@ -3,6 +3,7 @@ const ControllerService = require("../services/ControllerService")
 const TelemetronEventRequest = require("../models/TelemetronEventRequest")
 const RegisterSaleRequest = require("../models/TelemetronRegisterSaleRequest")
 const RegisterStateRequest = require("../models/TelemetronRegisterStateRequest")
+const RegisterControllerRequest = require("../models/RegisterControllerRequest")
 
 const logger = require("my-custom-logger")
 
@@ -41,7 +42,8 @@ class AggregationController {
             }
 
 
-
+            const noActionStatuses = ["poweroff", "reset"]
+            const actionStatuses = ["poweron", "enable"]
             const controller = await this.controllerService.getControllerByUID(uid)
 
             if (!controller) {
@@ -59,6 +61,22 @@ class AggregationController {
                 return await this.pingResponse(ctx)
             }
 
+            if(telemetronEventRequest.iccid && !telemetronEventRequest.mdb_product){
+                const registerControllerRequest = new RegisterControllerRequest({UID: uid, FW: telemetronEventRequest.version || "vendista v1", IMSI: telemetronEventRequest.iccid})
+                await this.controllerService.authController(registerControllerRequest)
+                return await this.pingResponse(ctx)
+            }
+
+
+            if(actionStatuses.includes(telemetronEventRequest.reason) && !telemetronEventRequest.mdb_product){
+                //await this.controllerService.authController({UID: uid, FW: "vendista v1", IMSI: })
+                return await this.pingResponse(ctx, 3 , "config")
+            }
+
+            if(noActionStatuses.includes(telemetronEventRequest.reason) && !telemetronEventRequest.mdb_product){
+                return await this.pingResponse(ctx)
+            }
+
             if(telemetronEventRequest.mdb_product){
 
                 for(let sale of telemetronEventRequest.mdb_product){
@@ -68,6 +86,8 @@ class AggregationController {
                 }
                 return await this.pingResponse(ctx)
             }
+
+            return await this.pingResponse(ctx)
 
 
         }
@@ -84,13 +104,16 @@ class AggregationController {
 
     }
 
-    async pingResponse(ctx, timeZone = 3){
+    async pingResponse(ctx, timeZone = 3, get){
         const date = new Date()
         date.setUTCHours(date.getUTCHours() + timeZone)
 
         const stringDate = `${date.getUTCFullYear()}-${("0" + (date.getUTCMonth()+1)).slice(-2)}-${("0" + date.getUTCDate()).slice(-2)} ${("0" + date.getUTCHours()).slice(-2)}:${("0" + date.getUTCMinutes()).slice(-2)}:${("0" + date.getUTCSeconds()).slice(-2)}`
 
         ctx.body = `time=${stringDate}&status=ok`
+        if(get){
+            ctx.body += `&get=${get}`
+        }
         ctx.status = 200
         let value = crc16("ARC", ctx.body).toString(16).toUpperCase()
         ctx.set({
