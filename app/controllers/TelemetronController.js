@@ -96,8 +96,6 @@ class AggregationController {
                     result = await this.controllerService.registerSale(registerSaleRequest)
                 }
                 let command
-
-                logger.info(`telemetron_mdb_product_result ${JSON.stringify(result)}`)
                 if(result.receipt && result.receipt.id){
                     command = `&vend_tx_id=${result.receipt.id}`
                 }
@@ -131,6 +129,9 @@ class AggregationController {
         if(command){
             ctx.body += command
         }
+
+
+        logger.info(`telemetron_ctx_body: ${ctx.body}`)
         ctx.status = 200
         let value = crc16("ARC", ctx.body).toString(16).toUpperCase()
         ctx.set({
