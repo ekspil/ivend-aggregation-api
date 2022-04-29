@@ -54,16 +54,17 @@ class AggregationController {
                 return this.returnMachineNotFound(ctx)
             }
 
+            if(telemetronEventRequest.version && !telemetronEventRequest.mdb_product){
+
+                logger.info(`telemetron_vendista_version ${JSON.stringify(telemetronEventRequest.version)}`)
+                await this.controllerService.authController({UID: uid, FW: telemetronEventRequest.version || "vendista v1", IMSI: telemetronEventRequest.simnumber})
+                return await this.pingResponse(ctx)
+            }
+
 
             if(telemetronEventRequest.reason === "ping" && !telemetronEventRequest.mdb_product){
                 const registerStateRequest = new RegisterStateRequest(telemetronEventRequest, uid)
                 await this.controllerService.registerState(registerStateRequest)
-                return await this.pingResponse(ctx)
-            }
-
-            if(telemetronEventRequest.version && !telemetronEventRequest.mdb_product){
-                const registerControllerRequest = new RegisterControllerRequest({UID: uid, FW: telemetronEventRequest.version || "vendista v1", IMSI: telemetronEventRequest.simnumber})
-                await this.controllerService.authController(registerControllerRequest)
                 return await this.pingResponse(ctx)
             }
 
