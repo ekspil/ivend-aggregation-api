@@ -61,7 +61,7 @@ class AggregationController {
                 return await this.pingResponse(ctx)
             }
 
-            if(telemetronEventRequest.iccid && !telemetronEventRequest.mdb_product){
+            if(telemetronEventRequest.version && !telemetronEventRequest.mdb_product){
                 const registerControllerRequest = new RegisterControllerRequest({UID: uid, FW: telemetronEventRequest.version || "vendista v1", IMSI: telemetronEventRequest.iccid})
                 await this.controllerService.authController(registerControllerRequest)
                 return await this.pingResponse(ctx)
