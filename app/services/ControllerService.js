@@ -174,7 +174,10 @@ class ControllerService {
           registerSale(input: $input) {
             id,
             sqr,
-            err
+            err,
+            receipt {
+                id
+            }
           }
         }
         `

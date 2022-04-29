@@ -3,7 +3,6 @@ const ControllerService = require("../services/ControllerService")
 const TelemetronEventRequest = require("../models/TelemetronEventRequest")
 const RegisterSaleRequest = require("../models/TelemetronRegisterSaleRequest")
 const RegisterStateRequest = require("../models/TelemetronRegisterStateRequest")
-const RegisterControllerRequest = require("../models/RegisterControllerRequest")
 
 const logger = require("my-custom-logger")
 
@@ -54,38 +53,55 @@ class AggregationController {
                 return this.returnMachineNotFound(ctx)
             }
 
-            if(telemetronEventRequest.version && !telemetronEventRequest.mdb_product){
+            //Ответ на запрос фискальных данных
+            if(telemetronEventRequest.reason === "ping" && telemetronEventRequest.vend_tx_id){
+                return await this.pingResponse(ctx, 3, "&fiscal=t%3D20190520T1356%26s%3D4.02%26fn%3D9999078900001341%26i%3D2853%26fp%3D599041704%26n%3D1")
+            }
 
-                logger.info(`telemetron_vendista_version ${JSON.stringify(telemetronEventRequest.version)}`)
+            //Инкассация
+            if(telemetronEventRequest.reason === "button" && telemetronEventRequest.events === "TIO"){
+                await this.controllerService.registerEvent({UID: uid, EventTime: (new Date(telemetronEventRequest.time + " +0300").getTime() / 1000).toFixed(0), Code: 2})
+                return await this.pingResponse(ctx)
+            }
+
+            //Регистрация - ловим конфиг пакет
+            if(telemetronEventRequest.version && telemetronEventRequest.simnumber && !telemetronEventRequest.mdb_product){
                 await this.controllerService.authController({UID: uid, FW: telemetronEventRequest.version || "vendista v1", IMSI: telemetronEventRequest.simnumber})
                 return await this.pingResponse(ctx)
             }
 
-
+            //Ответ на пинг
             if(telemetronEventRequest.reason === "ping" && !telemetronEventRequest.mdb_product){
                 const registerStateRequest = new RegisterStateRequest(telemetronEventRequest, uid)
                 await this.controllerService.registerState(registerStateRequest)
                 return await this.pingResponse(ctx)
             }
 
-
+            //Генерим конфиг пакет
             if(actionStatuses.includes(telemetronEventRequest.reason) && !telemetronEventRequest.mdb_product){
                 //await this.controllerService.authController({UID: uid, FW: "vendista v1", IMSI: ""})
-                return await this.pingResponse(ctx, 3 , "config")
+                return await this.pingResponse(ctx, 3 , "&get=config")
             }
 
+            //Ничего не делаем на эти пакеты
             if(noActionStatuses.includes(telemetronEventRequest.reason) && !telemetronEventRequest.mdb_product){
                 return await this.pingResponse(ctx)
             }
 
             if(telemetronEventRequest.mdb_product){
+                let result
 
                 for(let sale of telemetronEventRequest.mdb_product){
-                    logger.info(`telemetron_mdb_product ${JSON.stringify(sale)}`)
                     const registerSaleRequest = new RegisterSaleRequest(sale, uid)
-                    await this.controllerService.registerSale(registerSaleRequest)
+                    result = await this.controllerService.registerSale(registerSaleRequest)
                 }
-                return await this.pingResponse(ctx)
+                let command
+
+                logger.info(`telemetron_mdb_product_result ${JSON.stringify(result)}`)
+                if(result.receipt && result.receipt.id){
+                    command = `&vend_tx_id=${result.receipt.id}`
+                }
+                return await this.pingResponse(ctx, 3, command)
             }
 
             return await this.pingResponse(ctx)
@@ -105,15 +121,15 @@ class AggregationController {
 
     }
 
-    async pingResponse(ctx, timeZone = 3, get){
+    async pingResponse(ctx, timeZone = 3, command){
         const date = new Date()
         date.setUTCHours(date.getUTCHours() + timeZone)
 
         const stringDate = `${date.getUTCFullYear()}-${("0" + (date.getUTCMonth()+1)).slice(-2)}-${("0" + date.getUTCDate()).slice(-2)} ${("0" + date.getUTCHours()).slice(-2)}:${("0" + date.getUTCMinutes()).slice(-2)}:${("0" + date.getUTCSeconds()).slice(-2)}`
 
         ctx.body = `time=${stringDate}&status=ok`
-        if(get){
-            ctx.body += `&get=${get}`
+        if(command){
+            ctx.body += command
         }
         ctx.status = 200
         let value = crc16("ARC", ctx.body).toString(16).toUpperCase()
