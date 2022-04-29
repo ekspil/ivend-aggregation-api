@@ -42,8 +42,8 @@ class AggregationController {
             }
 
 
-            const noActionStatuses = ["poweroff", "reset"]
-            const actionStatuses = ["poweron", "enable"]
+            const noActionStatuses = ["poweroff", "reset", "enable"]
+            const actionStatuses = ["poweron"]
             const controller = await this.controllerService.getControllerByUID(uid)
 
             if (!controller) {
@@ -69,7 +69,7 @@ class AggregationController {
 
 
             if(actionStatuses.includes(telemetronEventRequest.reason) && !telemetronEventRequest.mdb_product){
-                await this.controllerService.authController({UID: uid, FW: "vendista v1", IMSI: ""})
+                //await this.controllerService.authController({UID: uid, FW: "vendista v1", IMSI: ""})
                 return await this.pingResponse(ctx, 3 , "config")
             }
 
