@@ -55,7 +55,7 @@ class AggregationController {
 
             //Ответ на запрос фискальных данных
             if(telemetronEventRequest.reason === "ping" && telemetronEventRequest.vend_tx_id){
-                return await this.pingResponse(ctx, 3, "&fiscal=t%3D20190520T1356%26s%3D4.02%26fn%3D9999078900001341%26i%3D2853%26fp%3D599041704%26n%3D1")
+                return await this.pingResponse(ctx, 3, `&fiscal=https://cabinet.ivend.pro/bill/${telemetronEventRequest.vend_tx_id}`)
             }
 
             //Инкассация
