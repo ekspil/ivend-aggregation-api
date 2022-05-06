@@ -9,11 +9,15 @@ class RegisterControllerResponse {
      * @throws {Error} throws on wrong rawObj
      */
     constructor(rawObj) {
-        const {Key, Mode, SDT, Terminal} = rawObj
+        const {Key, Mode, SDT, Terminal, PulsePatch} = rawObj
         this.Key = Key || null
         this.Mode = Mode || null
         this.Terminal = Terminal || null
+        this.PulsePatch = PulsePatch || null
         this.SDT = SDT || null
+        if(!this.PulsePatch){
+            delete this.PulsePatch
+        }
 
         if (!this.Key || !this.Mode) {
             throw new Error("Key and mode are required")

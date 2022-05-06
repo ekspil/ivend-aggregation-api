@@ -87,6 +87,13 @@ class ControllerService {
             mode
             registrationTime
             bankTerminalMode
+            pulse {
+                a
+                b
+                c
+                o
+                t
+            }
           }
         }
         `
