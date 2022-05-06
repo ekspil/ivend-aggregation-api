@@ -37,7 +37,7 @@ class AggregationController {
             // }
             logger.info(`aggregation_api_register_controller ${JSON.stringify(ctx.request.body)})`)
             const {accessKey, mode, registrationTime, bankTerminalMode, pulse} = await this.controllerService.authController(registerControllerRequest)
-
+            logger.info(`aggregation_api_register_controller_pulse ${JSON.stringify(pulse)})`)
             const time = new Date(registrationTime)
 
             const date = {
@@ -52,6 +52,7 @@ class AggregationController {
             const SDT = `${date.year}-${date.month}-${date.date} ${date.hours}:${date.minutes}:${date.seconds}`
 
             const body = {Key: accessKey, Mode: mode, SDT, Terminal: bankTerminalMode}
+
             if(pulse){
                 body.PulsePatch = `A${pulse.a};B${pulse.b};C${pulse.c};O${pulse.o};T${pulse.t};`
             }
