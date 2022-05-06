@@ -53,7 +53,7 @@ class AggregationController {
 
             const body = {Key: accessKey, Mode: mode, SDT, Terminal: bankTerminalMode}
             if(pulse){
-                body.PulsePatch = `A${pulse.a};B${pulse.b};C${pulse.c};O${pulse.o};T${pulse.t}`
+                body.PulsePatch = `A${pulse.a};B${pulse.b};C${pulse.c};O${pulse.o};T${pulse.t};`
             }
 
             ctx.body = new RegisterControllerResponse(body)
