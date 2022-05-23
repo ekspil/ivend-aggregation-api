@@ -251,8 +251,8 @@ class AggregationController {
     }
 
     async returnNotFound(ctx) {
-        logger.error(`404 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
-        ctx.status = 404
+        logger.error(`401 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        ctx.status = 401
         ctx.body = ""
     }
 

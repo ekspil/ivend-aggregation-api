@@ -105,3 +105,7 @@
 # 1.0.25 - Hotfix
 
 * fix logs
+
+# 1.0.27 - Hotfix
+
+* fix 404 not found error
