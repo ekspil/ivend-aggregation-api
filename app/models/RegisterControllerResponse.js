@@ -9,14 +9,18 @@ class RegisterControllerResponse {
      * @throws {Error} throws on wrong rawObj
      */
     constructor(rawObj) {
-        const {Key, Mode, SDT, Terminal, PulsePatch} = rawObj
+        const {Key, Mode, SDT, Terminal, PulsePatch, MechPatch} = rawObj
         this.Key = Key || null
         this.Mode = Mode || null
         this.Terminal = Terminal || null
         this.PulsePatch = PulsePatch || null
+        this.MechPatch = MechPatch || null
         this.SDT = SDT || null
         if(!this.PulsePatch){
             delete this.PulsePatch
+        }
+        if(!this.MechPatch){
+            delete this.MechPatch
         }
 
         if (!this.Key || !this.Mode) {

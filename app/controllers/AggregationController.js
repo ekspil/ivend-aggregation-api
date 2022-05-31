@@ -36,7 +36,7 @@ class AggregationController {
             //     return await this.returnValidationError(ctx)
             // }
             logger.info(`aggregation_api_register_controller ${JSON.stringify(ctx.request.body)})`)
-            const {accessKey, mode, registrationTime, bankTerminalMode, pulse} = await this.controllerService.authController(registerControllerRequest)
+            const {accessKey, mode, registrationTime, bankTerminalMode, pulse, mech} = await this.controllerService.authController(registerControllerRequest)
             logger.info(`aggregation_api_register_controller_pulse ${JSON.stringify(pulse)})`)
             const time = new Date(registrationTime)
 
@@ -55,6 +55,9 @@ class AggregationController {
 
             if(pulse){
                 body.PulsePatch = `A${pulse.a};B${pulse.b};C${pulse.c};O${pulse.o};T${pulse.t};`
+            }
+            if(mech){
+                body.MechPatch = `A${mech.a};B${mech.b};C${mech.c};D${mech.d};E${mech.e};F${mech.f};O${mech.o};T${mech.t};`
             }
 
             ctx.body = new RegisterControllerResponse(body)

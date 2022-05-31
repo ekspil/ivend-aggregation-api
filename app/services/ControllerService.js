@@ -94,6 +94,16 @@ class ControllerService {
                 o
                 t
             }
+            mech {
+                a
+                b
+                c
+                o
+                t
+                d
+                e
+                f
+            }
           }
         }
         `

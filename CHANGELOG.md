@@ -109,3 +109,7 @@
 # 1.0.27 - Hotfix
 
 * fix 404 not found error
+
+# 1.0.28 - Hotfix
+
+* mech mode
