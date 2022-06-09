@@ -27,7 +27,7 @@ class AggregationController {
         logger.info(`telemetron_test_full body: ${JSON.stringify(ctx.request.body)}, headers: ${JSON.stringify(ctx.headers)}`)
         try {
             if( !ctx.headers || !ctx.headers["x-key"] || ctx.headers["x-key"] !== process.env.TELEMETRON_KEY ){
-                return this.returnUnauthenticated(ctx)
+                return await this.pingResponse(ctx, 3, "&error=true")
             }
 
             const telemetronEventRequest = new TelemetronEventRequest(ctx.request.body)
@@ -46,11 +46,11 @@ class AggregationController {
             const controller = await this.controllerService.getControllerByUID(uid)
 
             if (!controller) {
-                return this.returnUnauthenticated(ctx)
+                return await this.pingResponse(ctx, 3, "&error=true")
             }
 
             if (!controller.machine) {
-                return this.returnMachineNotFound(ctx)
+                return await this.pingResponse(ctx, 3, "&error=true")
             }
 
             //Ответ на запрос фискальных данных
