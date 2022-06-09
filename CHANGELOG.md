@@ -113,3 +113,7 @@
 # 1.0.28 - Hotfix
 
 * mech mode
+
+# 1.0.29 - Hotfix
+
+* vendista response fix

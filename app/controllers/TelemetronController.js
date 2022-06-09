@@ -37,7 +37,7 @@ class AggregationController {
             const uid = await this.controllerService.getControllerUIDByIMEI(telemetronEventRequest.imei)
             if(!uid) {
 
-                return this.returnUnauthenticated(ctx)
+                return await this.pingResponse(ctx, 3, "&error=true")
             }
 
 
