@@ -121,3 +121,7 @@
 # 1.0.30 - Hotfix
 
 * vendista response fix
+
+# 1.0.31 - Hotfix
+
+* vendista response fix

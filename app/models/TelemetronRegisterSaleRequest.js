@@ -26,9 +26,19 @@ class RegisterSaleRequest {
                 break
         }
 
+        let price = 0.0
+        if (arr[1] === "free") {
+            price = 0.0
+        }
+        else {
+            price = Number(arr[1])
+        }
+
+
+
         this.UID = UID
         this.CheckTime = (new Date(arr[2]).getTime() / 1000).toFixed(0)
-        this.Price = Number(arr[1])
+        this.Price = price
         this.Pt = Pt
         this.ButtonId = Number(arr[0])
 
