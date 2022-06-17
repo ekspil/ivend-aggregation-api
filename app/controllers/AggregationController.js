@@ -122,10 +122,15 @@ class AggregationController {
                 return this.returnUnauthenticated(ctx)
             }
 
-            await this.controllerService.registerState(registerStateRequest)
+            const {cmd} = await this.controllerService.registerState(registerStateRequest)
 
 
-            ctx.body = ""
+            if (cmd){
+                ctx.body = {cmd}
+            }
+            else {
+                ctx.body = ""
+            }
             ctx.status = 200
         }
         catch (e) {

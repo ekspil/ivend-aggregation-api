@@ -135,6 +135,7 @@ class ControllerService {
         const query = `
         mutation($input: ControllerStateInput!) {
           registerControllerState(input: $input) {
+            cmd
             id
           }
         }
