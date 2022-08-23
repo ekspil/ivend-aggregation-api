@@ -40,7 +40,7 @@ class RegisterSaleRequest {
         this.CheckTime = (new Date(arr[2]).getTime() / 1000).toFixed(0)
         this.Price = price
         this.Pt = Pt
-        this.ButtonId = Number(arr[0])
+        this.ButtonId = Number(arr[0]) === 254 || Number(arr[0]) === 255 ? 0 : Number(arr[0])
 
         if (!this.UID || !this.CheckTime || this.Price === undefined || this.Pt === undefined|| this.ButtonId === undefined) {
             throw new Error("Some required arguments omitted in RegisterSaleRequest")
