@@ -129,3 +129,7 @@
 # 1.0.32 - Hotfix
 
 * cmd
+
+# 1.0.33 - Hotfix
+
+* vendista multiple sale

@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: aggregation-api
-        image: cr.yandex/crpfb8t478v3of681kce/aggregation-api:1.0.32
+        image: cr.yandex/crpfb8t478v3of681kce/aggregation-api:1.0.33
         ports:
           - containerPort: 3000
         readinessProbe:

@@ -89,12 +89,25 @@ class AggregationController {
             }
 
             if(telemetronEventRequest.mdb_product){
-                let result
+                let sale
+                for(let s of telemetronEventRequest.mdb_product){
+                    if(!sale) {
+                        sale = s
+                        continue
+                    }
+                    const arr = sale.split(",")
+                    const arrNext = s.split(",")
+                    if (arr[1] === "free") arr[1] = 0.0
+                    if (arrNext[1] === "free") arrNext[1] = 0.0
 
-                for(let sale of telemetronEventRequest.mdb_product){
-                    const registerSaleRequest = new RegisterSaleRequest(sale, uid)
-                    result = await this.controllerService.registerSale(registerSaleRequest)
+                    arr[1] = String(Number(arr[1]) + Number(arrNext[1]))
+                    sale = arr.join(",")
+
                 }
+
+
+                const registerSaleRequest = new RegisterSaleRequest(sale, uid)
+                const result = await this.controllerService.registerSale(registerSaleRequest)
                 let command
                 if(result.receipt && result.receipt.id){
                     command = `&vend_tx_id=${result.receipt.id}`
