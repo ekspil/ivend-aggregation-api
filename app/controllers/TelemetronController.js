@@ -18,7 +18,43 @@ class AggregationController {
         this.registerEvent = this.registerEvent.bind(this)
         this.registerEventExternal = this.registerEventExternal.bind(this)
         this.pingResponse = this.pingResponse.bind(this)
+        this.checkDoubles = this.checkDoubles.bind(this)
+        this.clearRequests = this.clearRequests.bind(this)
+        this.requests = []
+
+        setInterval(this.clearRequests, 5000)
     }
+
+
+
+    checkDoubles(telemetronEventRequest) {
+
+        let productsLength = 0
+        if(telemetronEventRequest.mdb_product) productsLength = telemetronEventRequest.mdb_product.length
+
+        const string = `${telemetronEventRequest.imei}-${telemetronEventRequest.reason}-${telemetronEventRequest.time}-${productsLength}`
+
+
+        const double = this.requests.find(item => item.string === string)
+
+        if(double) return false
+
+        this.requests.push({
+            string,
+            time: (new Date()).getTime()
+        })
+        return true
+    }
+    clearRequests() {
+
+        const checkTime = (new Date()).getTime() - 10000
+        this.requests = this.requests.filter(item => {
+            if(item.time < checkTime) return false
+            return true
+        })
+
+    }
+
 
     async registerEventExternal(ctx) {
         logger.info(`telemetron_test_external body: ${JSON.stringify(ctx.request.body)}, headers: ${JSON.stringify(ctx.headers)}`)
@@ -34,15 +70,29 @@ class AggregationController {
 
 
 
-            const uid = await this.controllerService.getControllerUIDByIMEI(telemetronEventRequest.imei)
+            const noActionStatuses = ["poweroff", "reset", "enable"]
+            const actionStatuses = ["poweron"]
+
+
+            //Ничего не делаем на эти пакеты
+            if(noActionStatuses.includes(telemetronEventRequest.reason) && !telemetronEventRequest.mdb_product){
+                return await this.pingResponse(ctx)
+            }
+
+
+            const doubleRequest = this.checkDoubles(telemetronEventRequest)
+            if(!doubleRequest){
+                return await this.pingResponse(ctx)
+            }
+
+
+
+            const uid = await this.controllerService.getControllerUIDByIMEI(telemetronEventRequest.imei, telemetronEventRequest.reason)
             if(!uid) {
 
                 return await this.pingResponse(ctx, 3, "&error=true")
             }
 
-
-            const noActionStatuses = ["poweroff", "reset", "enable"]
-            const actionStatuses = ["poweron"]
             const controller = await this.controllerService.getControllerByUID(uid)
 
             if (!controller) {
@@ -81,11 +131,6 @@ class AggregationController {
             if(actionStatuses.includes(telemetronEventRequest.reason) && !telemetronEventRequest.mdb_product){
                 //await this.controllerService.authController({UID: uid, FW: "vendista v1", IMSI: ""})
                 return await this.pingResponse(ctx, 3 , "&get=config")
-            }
-
-            //Ничего не делаем на эти пакеты
-            if(noActionStatuses.includes(telemetronEventRequest.reason) && !telemetronEventRequest.mdb_product){
-                return await this.pingResponse(ctx)
             }
 
             if(telemetronEventRequest.mdb_product){

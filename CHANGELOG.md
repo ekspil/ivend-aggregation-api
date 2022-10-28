@@ -133,3 +133,7 @@
 # 1.0.33 - Hotfix
 
 * vendista multiple sale
+
+# 1.0.34 - Hotfix
+
+* check doubles
