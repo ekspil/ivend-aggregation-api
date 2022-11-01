@@ -6,7 +6,7 @@ metadata:
   labels:
     app: aggregation-api
 spec:
-  replicas: 3
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: aggregation-api
-        image: cr.yandex/crpfb8t478v3of681kce/aggregation-api:1.0.34
+        image: cr.yandex/crpfb8t478v3of681kce/aggregation-api:1.0.35
         ports:
           - containerPort: 3000
         readinessProbe:
