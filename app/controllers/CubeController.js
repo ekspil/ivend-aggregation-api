@@ -50,11 +50,11 @@ class CubeController {
     }
     async registerEvent(ctx) {
         try {
-            if(ctx.req.headers["Authorization"] !== "Bearer eyJBcGlMb2dpbklkIjoiYWI1MWRiYWYtYTQyZC00YzNkLThmNzEtY2M4NGRhMzdkYjdhIiwibmJmIjoxNjczNDgyNzA4LCJleHAiOjE2NzM0ODYzMDgsImlhdCI6MTY3MzQ4MjcwOCwiaXNzIjoiaWlrbyIsImF1ZCI6ImNsaWVudHMifQ"){
+            if(ctx.req.headers["authorization"] !== `Bearer ${process.env.CUBE_TOKEN}`){
                 return this.returnUnauthenticated(ctx)
             }
 
-            logger.info(`aggregation_api_cube_sale ${JSON.stringify(ctx.request.body)})`)
+            logger.info(`aggregation_api_cube_event ${JSON.stringify(ctx.request.body)})`)
             ctx.body={
                 error: null,
                 status: "SUCCESS"
