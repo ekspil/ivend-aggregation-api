@@ -7,7 +7,7 @@ const router = new Router()
  * @returns {Router}
  */
 module.exports = function (injects) {
-    const {aggregationController, telemetronController} = injects
+    const {aggregationController, telemetronController, cubeController} = injects
 
     router.post("/register/controller", aggregationController.registerController)
     router.post("/register/error", aggregationController.registerError)
@@ -17,6 +17,9 @@ module.exports = function (injects) {
 
     router.post("/register/telemetron", telemetronController.registerEvent)
     router.post("/register/telemetron/external", telemetronController.registerEventExternal)
+
+    router.post("/register/cube/sale", cubeController.registerSale)
+    router.post("/register/cube/event", cubeController.registerEvent)
 
     router.get("/status", (ctx) => {
         ctx.status = 200

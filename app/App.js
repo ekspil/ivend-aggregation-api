@@ -6,6 +6,7 @@ const bodyParser = require("koa-bodyparser")
 const Routes = require("./routes/Routes")
 const AggregationController = require("./controllers/AggregationController")
 const TelemetronController = require("./controllers/TelemetronController")
+const CubeController = require("./controllers/CubeController")
 
 
 const app = new Koa()
@@ -28,7 +29,8 @@ ApiModule.start = async () => {
 
     const aggregationController = new AggregationController()
     const telemetronController = new TelemetronController()
-    const router = Routes({aggregationController, telemetronController})
+    const cubeController = new CubeController()
+    const router = Routes({aggregationController, telemetronController, cubeController})
 
     app.use(async (ctx, next) => {
         if (ctx.request.method === "GET") {
