@@ -24,7 +24,7 @@ class CubeController {
 
     async registerSale(ctx) {
         try {
-            if(ctx.req.headers["Authorization"] !== "Bearer eyJBcGlMb2dpbklkIjoiYWI1MWRiYWYtYTQyZC00YzNkLThmNzEtY2M4NGRhMzdkYjdhIiwibmJmIjoxNjczNDgyNzA4LCJleHAiOjE2NzM0ODYzMDgsImlhdCI6MTY3MzQ4MjcwOCwiaXNzIjoiaWlrbyIsImF1ZCI6ImNsaWVudHMifQ"){
+            if(ctx.req.headers["authorization"] !== `Bearer ${process.env.CUBE_TOKEN}`){
                 return this.returnUnauthenticated(ctx)
             }
 
