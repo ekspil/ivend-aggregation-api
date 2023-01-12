@@ -29,6 +29,37 @@ class CubeController {
             }
 
             logger.info(`aggregation_api_cube_sale ${JSON.stringify(ctx.request.body)})`)
+            ctx.body={
+                error: null,
+                status: "SUCCESS"
+            }
+            ctx.status = 200
+
+        }
+        catch (e) {
+            if (e && e.response && Array.isArray(e.response.errors) && e.response.errors[0] && e.response.errors[0].message) {
+                const {message} = e.response.errors[0]
+                if (message === "Machine not found") {
+                    return this.returnMachineNotFound(ctx)
+                }
+            }
+
+            return this.returnInternalServerError(ctx, e)
+        }
+
+    }
+    async registerEvent(ctx) {
+        try {
+            if(ctx.req.headers["Authorization"] !== "Bearer eyJBcGlMb2dpbklkIjoiYWI1MWRiYWYtYTQyZC00YzNkLThmNzEtY2M4NGRhMzdkYjdhIiwibmJmIjoxNjczNDgyNzA4LCJleHAiOjE2NzM0ODYzMDgsImlhdCI6MTY3MzQ4MjcwOCwiaXNzIjoiaWlrbyIsImF1ZCI6ImNsaWVudHMifQ"){
+                return this.returnUnauthenticated(ctx)
+            }
+
+            logger.info(`aggregation_api_cube_sale ${JSON.stringify(ctx.request.body)})`)
+            ctx.body={
+                error: null,
+                status: "SUCCESS"
+            }
+            ctx.status = 200
 
         }
         catch (e) {
