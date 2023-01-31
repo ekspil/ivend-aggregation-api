@@ -7,6 +7,9 @@ const ControllerService = require("../services/ControllerService")
 // const RegisterEventRequest = require("../models/RegisterEventRequest")
 // const RegisterControllerResponse = require("../models/RegisterControllerResponse")
 
+const RegisterSaleRequest = require("../models/CubeRegisterSaleRequest")
+const RegisterStateRequest = require("../models/CubeRegisterStateRequest")
+
 const logger = require("my-custom-logger")
 
 /* eslint require-atomic-updates: 0 */
@@ -29,9 +32,27 @@ class CubeController {
             }
 
             logger.info(`aggregation_api_cube_sale ${JSON.stringify(ctx.request.body)})`)
-            ctx.body={
-                error: null,
-                status: "SUCCESS"
+
+            const registerSaleRequest = new RegisterSaleRequest(ctx.request.body)
+
+            const controller = await this.controllerService.getControllerByUID(registerSaleRequest.UID)
+
+            if (!controller) {
+                return this.returnNotFound(ctx)
+            }
+
+            if (!controller.machine) {
+                return this.returnMachineNotFound(ctx)
+            }
+
+            const sale = await this.controllerService.registerSale(registerSaleRequest)
+
+            const {sqr, err} = sale
+
+            ctx.body= {
+                error: err,
+                status: "SUCCESS",
+                qr: sqr
             }
             ctx.status = 200
 
@@ -55,6 +76,16 @@ class CubeController {
             }
 
             logger.info(`aggregation_api_cube_event ${JSON.stringify(ctx.request.body)})`)
+            const registerStateRequest = new RegisterStateRequest(ctx.request.body)
+
+            const controller = await this.controllerService.getControllerByUID(registerStateRequest.UID)
+
+            if (!controller) {
+                return this.returnNotFound(ctx)
+            }
+
+
+            await this.controllerService.registerState(registerStateRequest)
             ctx.body={
                 error: null,
                 status: "SUCCESS"
@@ -96,8 +127,8 @@ class CubeController {
     }
 
     async returnNotFound(ctx) {
-        logger.error(`401 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
-        ctx.status = 401
+        logger.error(`413 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
+        ctx.status = 413
         ctx.body = ""
     }
 
