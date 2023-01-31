@@ -18,7 +18,7 @@ class RegisterStateRequest {
             bh: "1",
             cv: 0,
             bv: 0,
-            bus: "001",
+            bus: "0011",
             ms: "0",
             ar: 0
         }
