@@ -22,6 +22,7 @@ class CubeController {
     constructor() {
         this.controllerService = new ControllerService()
         this.registerSale = this.registerSale.bind(this)
+        this.registerEvent = this.registerEvent.bind(this)
     }
 
 
