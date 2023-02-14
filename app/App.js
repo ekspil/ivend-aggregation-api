@@ -37,7 +37,7 @@ ApiModule.start = async () => {
             return await next()
         }
 
-        const contentType = ctx.req.headers["content-type"]
+        const contentType = ctx.req.headers["content-type"] || ""
 
         if (ctx.request.method !== "GET" && !(contentType.includes("application/json") || contentType.includes("application/x-www-form-urlencoded") )) {
             ctx.status = 400

@@ -17,6 +17,7 @@ class ControllerService {
         this.registerError = this.registerError.bind(this)
         this.registerSale = this.registerSale.bind(this)
         this.registerState = this.registerState.bind(this)
+        this.getCubeToken = this.getCubeToken.bind(this)
     }
 
     /**
@@ -265,6 +266,32 @@ class ControllerService {
         if (!data.registerControllerError) {
             throw new Error("Failed to register error, registerError returned null")
         }
+    }
+
+    /**
+     * Registers the controller error
+     * @param getCubeToken {}
+     * @returns {Promise<String>}
+     */
+    async getCubeToken() {
+        const query = `
+        mutation {
+          getCubeToken
+        }
+        `
+        try{
+            const data = await client.request(query)
+
+            if (!data.getCubeToken) {
+                return null
+            }
+
+            return data.getCubeToken   
+        }
+        catch (e) {
+            return null
+        }
+        
     }
 
     /**

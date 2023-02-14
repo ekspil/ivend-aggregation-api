@@ -4,7 +4,7 @@ const server = {
 
     start: async () => {
         await App.start()
-        App.listen(3000)
+        App.listen(80)
     },
 
     stop: async () => {

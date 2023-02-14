@@ -11,6 +11,7 @@ const RegisterSaleRequest = require("../models/CubeRegisterSaleRequest")
 const RegisterStateRequest = require("../models/CubeRegisterStateRequest")
 
 const logger = require("my-custom-logger")
+const fetch = require("node-fetch")
 
 /* eslint require-atomic-updates: 0 */
 
@@ -23,6 +24,10 @@ class CubeController {
         this.controllerService = new ControllerService()
         this.registerSale = this.registerSale.bind(this)
         this.registerEvent = this.registerEvent.bind(this)
+        this.token = null
+        setInterval(()=>{
+            this.token = null
+        }, 14 * 24 * 60 * 60 * 1000)
     }
 
 
@@ -50,12 +55,72 @@ class CubeController {
 
             const {sqr, err} = sale
 
-            ctx.body= {
-                error: err,
-                status: "SUCCESS",
-                qr: sqr
+            if(err === "exist"){
+                logger.error("cube_request_status: BILL_ALREADY_EXIST")
+                ctx.body= {
+                    error: "BILL_ALREADY_EXIST",
+                    status: "ERROR",
+                    qr: sqr
+                }
+                ctx.status = 200
+                return
             }
-            ctx.status = 200
+            const body = {
+                id: ctx.request.body.id,
+                deviceId: ctx.request.body.deviceId,
+                code: Buffer.from(sqr).toString("base64")
+            }
+            let token
+            if(this.token){
+                token = this.token
+            }
+            else {
+                token = await this.getToken()
+                this.token = token
+            }
+
+            if(!token) {
+                logger.error("cube_request_status: TOKEN_NOT_SET")
+                ctx.body= {
+                    error: "QR_CODE_DID_NOT_SEND",
+                    status: "ERROR",
+                    qr: sqr
+                }
+                ctx.status = 200
+                return
+            }
+
+            const url = "https://api-cube-test.aqsi.ru/tlm/v1/sales/sendReceiptURLQRCode"
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(body)
+            })
+
+            if (!(response.status === 200 || response.status === 201)) {
+                logger.error("cube_request_status: " + response.status)
+                ctx.body= {
+                    error: "QR_CODE_DID_NOT_SEND",
+                    status: "ERROR",
+                    qr: sqr
+                }
+                ctx.status = 200
+            }
+            else{
+
+                ctx.body= {
+                    error: err,
+                    status: "SUCCESS",
+                    qr: sqr
+                }
+                ctx.status = 200
+
+            }
+
+
 
         }
         catch (e) {
@@ -113,6 +178,10 @@ class CubeController {
         logger.error(`412 error at ${ctx.request.url}, body = ${JSON.stringify(ctx.request.body)}`)
         ctx.status = 412
         ctx.body = ""
+    }
+
+    async getToken() {
+        return this.controllerService.getCubeToken()
     }
 
     async returnValidationError(ctx) {
