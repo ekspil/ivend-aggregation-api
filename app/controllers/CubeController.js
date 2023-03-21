@@ -40,7 +40,7 @@ class CubeController {
             logger.info(`aggregation_api_cube_sale ${JSON.stringify(ctx.request.body)})`)
 
             const registerSaleRequest = new RegisterSaleRequest(ctx.request.body)
-
+            logger.info(`aggregation_api_cube_sale before_get_controller_send ${new Date()})`)
             const controller = await this.controllerService.getControllerByUID(registerSaleRequest.UID)
 
             if (!controller) {
@@ -50,9 +50,9 @@ class CubeController {
             if (!controller.machine) {
                 return this.returnMachineNotFound(ctx)
             }
-
+            logger.info(`aggregation_api_cube_sale before_sale_send ${new Date()})`)
             const sale = await this.controllerService.registerSale(registerSaleRequest)
-
+            logger.info(`aggregation_api_cube_sale after_sale_send ${new Date()})`)
             const {sqr, err} = sale
 
             if(err === "exist"){
