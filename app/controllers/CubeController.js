@@ -89,7 +89,7 @@ class CubeController {
                 ctx.status = 200
                 return
             }
-
+            logger.info(`aggregation_api_cube_sale before_qr_send ${new Date()})`)
             const url = "https://api-cube-test.aqsi.ru/tlm/v1/sales/sendReceiptURLQRCode"
             const response = await fetch(url, {
                 method: "POST",
@@ -99,6 +99,7 @@ class CubeController {
                 },
                 body: JSON.stringify(body)
             })
+            logger.info(`aggregation_api_cube_sale after_qr_send ${new Date()})`)
 
             if (!(response.status === 200 || response.status === 201)) {
                 logger.error("cube_request_status: " + response.status)
