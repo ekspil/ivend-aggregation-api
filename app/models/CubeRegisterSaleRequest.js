@@ -17,7 +17,7 @@ class RegisterSaleRequest {
 
         this.UID = "400-" + deviceId
         this.CheckTime = (new Date(processedAt).getTime() / 1000).toFixed(0)
-        this.Price = Number(price).toFixed(0)
+        this.Price = Number(Number(price).toFixed(0))
         this.Pt = paymentType
         this.ButtonId = slotInfo.slotId || 0
 
