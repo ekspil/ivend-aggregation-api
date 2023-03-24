@@ -137,3 +137,7 @@
 # 1.0.34 - Hotfix
 
 * check doubles
+
+# 1.0.35 - Hotfix
+
+* check doubles
