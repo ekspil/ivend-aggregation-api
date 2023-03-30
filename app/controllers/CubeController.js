@@ -40,7 +40,6 @@ class CubeController {
             logger.info(`aggregation_api_cube_sale ${JSON.stringify(ctx.request.body)})`)
 
             const registerSaleRequest = new RegisterSaleRequest(ctx.request.body)
-            logger.info(`aggregation_api_cube_sale before_get_controller_send ${new Date()})`)
             const controller = await this.controllerService.getControllerByUID(registerSaleRequest.UID)
 
             if (!controller) {
@@ -50,9 +49,7 @@ class CubeController {
             if (!controller.machine) {
                 return this.returnMachineNotFound(ctx)
             }
-            logger.info(`aggregation_api_cube_sale before_sale_send ${new Date()})`)
             const sale = await this.controllerService.registerSale(registerSaleRequest)
-            logger.info(`aggregation_api_cube_sale after_sale_send ${new Date()})`)
             const {sqr, err} = sale
 
             if(err === "exist"){
@@ -89,7 +86,6 @@ class CubeController {
                 ctx.status = 200
                 return
             }
-            logger.info(`aggregation_api_cube_sale before_qr_send ${new Date()})`)
             const url = "https://api-cube-test.aqsi.ru/tlm/v1/sales/sendReceiptURLQRCode"
             const response = await fetch(url, {
                 method: "POST",
@@ -99,7 +95,6 @@ class CubeController {
                 },
                 body: JSON.stringify(body)
             })
-            logger.info(`aggregation_api_cube_sale after_qr_send ${new Date()})`)
 
             if (!(response.status === 200 || response.status === 201)) {
                 logger.error("cube_request_status: " + response.status)

@@ -141,3 +141,7 @@
 # 1.0.35 - Hotfix
 
 * check doubles
+
+# 1.0.37 - Hotfix
+
+* del logs
