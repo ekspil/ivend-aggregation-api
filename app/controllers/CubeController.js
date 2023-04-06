@@ -138,7 +138,18 @@ class CubeController {
             }
 
             logger.info(`aggregation_api_cube_event ${JSON.stringify(ctx.request.body)})`)
+
+            if(ctx.request.body.status === "offline") {
+
+                ctx.body={
+                    error: null,
+                    status: "SUCCESS"
+                }
+                ctx.status = 200
+                return
+            }
             const registerStateRequest = new RegisterStateRequest(ctx.request.body)
+
 
             const controller = await this.controllerService.getControllerByUID(registerStateRequest.UID)
 
