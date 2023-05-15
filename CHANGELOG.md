@@ -145,3 +145,7 @@
 # 1.0.37 - Hotfix
 
 * del logs
+
+# 1.0.38 - Hotfix
+
+* aqsi serial identification

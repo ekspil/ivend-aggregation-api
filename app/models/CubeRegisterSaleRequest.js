@@ -12,10 +12,10 @@ class RegisterSaleRequest {
      */
     constructor(rawObj) {
 
-        const {deviceId, processedAt, price, paymentType, slotInfo} = rawObj
+        const {processedAt, price, paymentType, slotInfo, deviceSerialNumber} = rawObj
 
 
-        this.UID = "400-" + deviceId
+        this.UID = "400-" + deviceSerialNumber
         this.CheckTime = (new Date(processedAt).getTime() / 1000).toFixed(0)
         this.Price = Number(price)
         this.Pt = paymentType

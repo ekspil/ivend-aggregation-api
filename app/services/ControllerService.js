@@ -160,6 +160,7 @@ class ControllerService {
         const variables = {
             input: {
                 controllerUid: registerStateRequest.UID,
+                data: registerStateRequest.data || null,
                 coinAcceptorStatus: BusStatusMap[ch],
                 billAcceptorStatus: BusStatusMap[bh],
                 coinAmount: cv,

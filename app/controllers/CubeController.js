@@ -52,6 +52,7 @@ class CubeController {
             const sale = await this.controllerService.registerSale(registerSaleRequest)
             const {sqr, err} = sale
 
+            logger.info(`aggregation_api_cube_sale_debug_qr ${JSON.stringify(sqr)})`)
             if(err === "exist"){
                 logger.error("cube_request_status: BILL_ALREADY_EXIST")
                 ctx.body= {
@@ -86,7 +87,8 @@ class CubeController {
                 ctx.status = 200
                 return
             }
-            const url = "https://api-cube.aqsi.ru/tlm/v1/sales/sendReceiptURLQRCode"
+            const urlServer = process.env.AQSI_URL || "https://api-cube.aqsi.ru"
+            const url = urlServer + "/tlm/v1/sales/sendReceiptURLQRCode"
             const response = await fetch(url, {
                 method: "POST",
                 headers: {

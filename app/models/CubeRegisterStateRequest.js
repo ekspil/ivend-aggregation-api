@@ -10,9 +10,9 @@ class RegisterStateRequest {
      * @throws {Error} throws on invalid rawObj
      */
     constructor(rawObj) {
-        const {deviceId} = rawObj
+        const {deviceId, deviceSerialNumber} = rawObj
 
-        this.UID = "400-" + deviceId
+        this.UID = "400-" + deviceSerialNumber
         this.State = {
             ch: "0",
             bh: "1",
@@ -22,8 +22,11 @@ class RegisterStateRequest {
             ms: "0",
             ar: 0
         }
+        this.data = {
+            deviceId
+        }
 
-        if (!deviceId) {
+        if (!deviceSerialNumber) {
             throw new Error("UID are required")
         }
     }
