@@ -12,7 +12,7 @@ class RegisterStateRequest {
     constructor(rawObj) {
         const {deviceId, deviceSerialNumber} = rawObj
 
-        this.UID = "400-" + deviceSerialNumber
+        this.UID = deviceSerialNumber
         this.State = {
             ch: "0",
             bh: "1",

@@ -15,7 +15,7 @@ class RegisterSaleRequest {
         const {processedAt, price, paymentType, slotInfo, deviceSerialNumber} = rawObj
 
 
-        this.UID = "400-" + deviceSerialNumber
+        this.UID = deviceSerialNumber
         this.CheckTime = (new Date(processedAt).getTime() / 1000).toFixed(0)
         this.Price = Number(price)
         this.Pt = paymentType
