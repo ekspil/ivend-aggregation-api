@@ -141,7 +141,7 @@ class CubeController {
 
             logger.info(`aggregation_api_cube_event ${JSON.stringify(ctx.request.body)})`)
 
-            const status = await this.controllerService.updateCubeStatus(ctx.request.body.status)
+            const status = await this.controllerService.updateCubeStatus(ctx.request.body)
 
             if(ctx.request.body.status === "offline") {
 
