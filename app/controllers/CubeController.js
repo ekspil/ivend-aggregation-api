@@ -156,18 +156,16 @@ class CubeController {
             if(ctx.request.body.status === "online" && status === "offline"){
 
                 const authController = new RegisterControllerRequest(ctx.request.body)
-                await this.controllerService.authController(authController)
+                try{
+                    await this.controllerService.authController(authController)
+                }catch (e) {
+                    logger.info("aggregation_api_cube_event сontroller not found, trying to register")
+                }
 
             }
 
             const registerStateRequest = new RegisterStateRequest(ctx.request.body)
 
-
-            const controller = await this.controllerService.getControllerByUID(registerStateRequest.UID)
-
-            if (!controller) {
-                return this.returnNotFound(ctx)
-            }
 
 
             await this.controllerService.registerState(registerStateRequest)
