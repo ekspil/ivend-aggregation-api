@@ -1,6 +1,6 @@
 const ControllerService = require("../services/ControllerService")
 // const ValidationService = require("../services/ValidationService")
-// const RegisterControllerRequest = require("../models/RegisterControllerRequest")
+const RegisterControllerRequest = require("../models/CubeRegisterControllerRequest")
 // const RegisterErrorRequest = require("../models/RegisterErrorRequest")
 // const RegisterStateRequest = require("../models/RegisterStateRequest")
 // const RegisterSaleRequest = require("../models/RegisterSaleRequest")
@@ -141,6 +141,8 @@ class CubeController {
 
             logger.info(`aggregation_api_cube_event ${JSON.stringify(ctx.request.body)})`)
 
+            const status = await this.controllerService.updateCubeStatus(ctx.request.body.status)
+
             if(ctx.request.body.status === "offline") {
 
                 ctx.body={
@@ -150,6 +152,14 @@ class CubeController {
                 ctx.status = 200
                 return
             }
+
+            if(ctx.request.body.status === "online" && status === "offline"){
+
+                const authController = new RegisterControllerRequest(ctx.request.body)
+                await this.controllerService.authController(authController)
+
+            }
+
             const registerStateRequest = new RegisterStateRequest(ctx.request.body)
 
 

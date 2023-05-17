@@ -270,6 +270,37 @@ class ControllerService {
     }
 
     /**
+     * updateCubeStatus
+     * @param registerErrorRequest {RegisterErrorRequest}
+     * @returns {Promise<ControllerModel>}
+     */
+    async updateCubeStatus({deviceSerialNumber, status}) {
+        const query = `
+        mutation($input: UpdateCubeStatusInput!) {
+          updateCubeStatus(input: $input)
+        }
+        `
+
+
+
+
+        const variables = {
+            input: {
+                controllerUid: deviceSerialNumber,
+                status
+            }
+        }
+
+        const data = await client.request(query, variables)
+
+        if (!data.updateCubeStatus) {
+            throw new Error("Failed to register error, registerError returned null")
+        }
+
+        return data.updateCubeStatus
+    }
+
+    /**
      * Registers the controller error
      * @param getCubeToken {}
      * @returns {Promise<String>}

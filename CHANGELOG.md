@@ -149,3 +149,7 @@
 # 1.0.38 - Hotfix
 
 * aqsi serial identification
+
+# 1.0.41 - Hotfix
+
+* aqsi register event
